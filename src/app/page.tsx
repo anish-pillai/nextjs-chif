@@ -15,7 +15,7 @@ export default function Home() {
           <h1 className="mb-6">
             <span className="block text-3xl md:text-4xl font-medium mb-2">Welcome to</span>
             <span className="block text-6xl md:text-7xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-primary-400 to-primary-600 dark:from-primary-300 dark:to-primary-500">City Harvest</span>
-            <span className="block text-5xl md:text-6xl font-bold">Intentional Fellowship</span>
+            <span className="block text-5xl md:text-6xl font-bold">International Fellowship</span>
           </h1>
           <p className="text-xl md:text-2xl mb-8">Join us this Sunday for an inspiring worship experience</p>
           <div className="flex flex-col md:flex-row items-center justify-center gap-4">
