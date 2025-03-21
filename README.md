@@ -28,7 +28,7 @@ A modern, responsive church website built with Next.js and Tailwind CSS.
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/nextjs-chif.git
+git clone https://github.com/anish-pillai/nextjs-chif.git
 ```
 
 2. Install dependencies:
