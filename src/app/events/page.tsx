@@ -38,114 +38,114 @@ const EventsPage = () => {
       {/* Events Grid */}
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
         {/* Sunday Worship Service */}
-        <div className="bg-gray-800 rounded-lg p-6">
-          <div className="text-blue-400 mb-4">Every Sunday</div>
-          <h3 className="text-2xl font-bold mb-3">Sunday Worship Service</h3>
-          <p className="text-gray-300 mb-4">
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg border border-gray-100 dark:border-gray-700">
+          <div className="text-primary-600 dark:text-primary-400 mb-4">Every Sunday</div>
+          <h3 className="text-2xl font-bold mb-3 text-gray-900 dark:text-white">Sunday Worship Service</h3>
+          <p className="text-gray-600 dark:text-gray-300 mb-4">
             Join us for worship, prayer, and the Word.
           </p>
-          <div className="flex items-center gap-2 text-gray-300 mb-2">
+          <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300 mb-2">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             10:00 AM
           </div>
-          <div className="flex items-center gap-2 text-gray-300 mb-4">
+          <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300 mb-4">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
             Main Sanctuary
           </div>
-          <button className="w-full bg-blue-500 hover:bg-blue-600 transition py-2 rounded-md">
+          <button className="w-full bg-primary-600 hover:bg-primary-700 text-white transition py-2 rounded-md">
             Register Now
           </button>
         </div>
 
         {/* Youth Night */}
-        <div className="bg-gray-800 rounded-lg p-6">
-          <div className="text-blue-400 mb-4">Every Friday</div>
-          <h3 className="text-2xl font-bold mb-3">Youth Night</h3>
-          <p className="text-gray-300 mb-4">
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg border border-gray-100 dark:border-gray-700">
+          <div className="text-primary-600 dark:text-primary-400 mb-4">Every Friday</div>
+          <h3 className="text-2xl font-bold mb-3 text-gray-900 dark:text-white">Youth Night</h3>
+          <p className="text-gray-600 dark:text-gray-300 mb-4">
             A night of fellowship, games, and spiritual growth for teens.
           </p>
-          <div className="flex items-center gap-2 text-gray-300 mb-2">
+          <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300 mb-2">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             7:00 PM
           </div>
-          <div className="flex items-center gap-2 text-gray-300 mb-4">
+          <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300 mb-4">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
             Youth Center
           </div>
-          <button className="w-full bg-blue-500 hover:bg-blue-600 transition py-2 rounded-md">
+          <button className="w-full bg-primary-600 hover:bg-primary-700 text-white transition py-2 rounded-md">
             Register Now
           </button>
         </div>
 
         {/* Bible Study */}
-        <div className="bg-gray-800 rounded-lg p-6">
-          <div className="text-blue-400 mb-4">Every Wednesday</div>
-          <h3 className="text-2xl font-bold mb-3">Bible Study</h3>
-          <p className="text-gray-300 mb-4">
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg border border-gray-100 dark:border-gray-700">
+          <div className="text-primary-600 dark:text-primary-400 mb-4">Every Wednesday</div>
+          <h3 className="text-2xl font-bold mb-3 text-gray-900 dark:text-white">Bible Study</h3>
+          <p className="text-gray-600 dark:text-gray-300 mb-4">
             In-depth Bible study and discussion.
           </p>
-          <div className="flex items-center gap-2 text-gray-300 mb-2">
+          <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300 mb-2">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             7:00 PM
           </div>
-          <div className="flex items-center gap-2 text-gray-300 mb-4">
+          <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300 mb-4">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
             Fellowship Hall
           </div>
-          <button className="w-full bg-blue-500 hover:bg-blue-600 transition py-2 rounded-md">
+          <button className="w-full bg-primary-600 hover:bg-primary-700 text-white transition py-2 rounded-md">
             Register Now
           </button>
         </div>
       </div>
 
       {/* Submit Event Form */}
-      <div className="max-w-2xl mx-auto bg-gray-800 rounded-lg p-8">
-        <h2 className="text-3xl font-bold text-center mb-4">Submit an Event</h2>
-        <p className="text-gray-300 text-center mb-8">
+      <div className="max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-lg p-8 shadow-lg border border-gray-100 dark:border-gray-700">
+        <h2 className="text-3xl font-bold text-center mb-4 text-gray-900 dark:text-white">Submit an Event</h2>
+        <p className="text-gray-600 dark:text-gray-300 text-center mb-8">
           Have an event you&apos;d like to add to our calendar? Submit it for review.
         </p>
         <form className="space-y-4">
           <input
             type="text"
             placeholder="Event Name"
-            className="w-full bg-gray-900 rounded-md px-4 py-2 text-white"
+            className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md px-4 py-2 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
           />
           <input
             type="date"
-            className="w-full bg-gray-900 rounded-md px-4 py-2 text-white"
+            className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md px-4 py-2 text-gray-900 dark:text-white"
           />
           <input
             type="time"
-            className="w-full bg-gray-900 rounded-md px-4 py-2 text-white"
+            className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md px-4 py-2 text-gray-900 dark:text-white"
           />
           <input
             type="text"
             placeholder="Location"
-            className="w-full bg-gray-900 rounded-md px-4 py-2 text-white"
+            className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md px-4 py-2 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
           />
           <textarea
             placeholder="Event Description"
             rows={4}
-            className="w-full bg-gray-900 rounded-md px-4 py-2 text-white"
+            className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md px-4 py-2 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
           />
           <button
             type="submit"
-            className="w-full bg-blue-500 hover:bg-blue-600 transition py-3 rounded-md font-semibold"
+            className="w-full bg-primary-600 hover:bg-primary-700 text-white transition py-3 rounded-md font-semibold"
           >
             Submit Event
           </button>

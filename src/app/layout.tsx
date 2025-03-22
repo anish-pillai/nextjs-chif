@@ -28,13 +28,15 @@ export default function RootLayout({
         <ThemeProvider>
           <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-200">
             <header className="fixed top-0 w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800 z-50">
-              <div className="container mx-auto px-4 h-16 flex items-center">
-                <Link href="/" className="flex items-center space-x-2">
-                  <Church className="h-8 w-8 text-primary-600 dark:text-primary-400" />
-                  <span className="text-xl font-bold">CHIF</span>
-                </Link>
-                <Navigation />
-                <div className="flex items-center space-x-4">
+              <div className="container mx-auto px-2 h-16 flex items-center justify-between">
+                <div className="flex items-center">
+                  <Link href="/" className="flex items-center space-x-2 mr-8">
+                    <Church className="h-8 w-8 text-primary-600 dark:text-primary-400" />
+                    <span className="text-xl font-bold">CHIF</span>
+                  </Link>
+                  <Navigation />
+                </div>
+                <div className="flex items-center space-x-4 ml-4">
                   <Link
                     href="/give"
                     className="hidden md:flex items-center space-x-1 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-md transition-colors"

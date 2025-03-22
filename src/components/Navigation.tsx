@@ -25,7 +25,7 @@ const navigation = [
 
 export function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [mobileDropdown, setMobileDropdown] = useState<string | null>(null);
   const pathname = usePathname();
 
   const isActive = (href: string) => pathname === href;
@@ -39,40 +39,26 @@ export function Navigation() {
             {item.children ? (
               <>
                 <button
-                  className={`px-3 py-2 rounded-md text-sm font-medium flex items-center space-x-1 hover:bg-gray-100 dark:hover:bg-gray-800 ${
-                    isActive(item.href) ? 'text-primary-600 dark:text-primary-400' : ''
+                  className={`px-3 py-2 rounded-md text-sm font-medium flex items-center space-x-1 hover:bg-gray-100 dark:hover:bg-gray-800 ${                    isActive(item.href) ? 'text-primary-600 dark:text-primary-400' : ''
                   }`}
-                  onMouseEnter={() => setActiveDropdown(item.name)}
-                  onClick={() => setActiveDropdown(activeDropdown === item.name ? null : item.name)}
-                  aria-expanded={activeDropdown === item.name}
                 >
                   <span>{item.name}</span>
-                  <ChevronDown className={`h-4 w-4 transition-transform ${
-                    activeDropdown === item.name ? 'rotate-180' : ''
-                  }`} />
+                  <ChevronDown className="h-4 w-4 transition-transform group-hover:rotate-180" />
                 </button>
-                {activeDropdown === item.name && (
-                  <div
-                    className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 z-50"
-                    onMouseLeave={() => setActiveDropdown(null)}
-                  >
-                    <div className="py-1">
-                      {item.children.map((child) => (
-                        <Link
-                          key={child.name}
-                          href={child.href}
-                          className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-                          onClick={() => {
-                            setActiveDropdown(null);
-                            setMobileMenuOpen(false);
-                          }}
-                        >
-                          {child.name}
-                        </Link>
-                      ))}
-                    </div>
+                <div className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                  <div className="py-1">
+                    {item.children.map((child) => (
+                      <Link
+                        key={child.name}
+                        href={child.href}
+                        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        {child.name}
+                      </Link>
+                    ))}
                   </div>
-                )}
+                </div>
               </>
             ) : (
               <Link
@@ -111,17 +97,17 @@ export function Navigation() {
                     <>
                       <button
                         className="w-full text-left px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 dark:hover:bg-gray-800"
-                        onClick={() => setActiveDropdown(activeDropdown === item.name ? null : item.name)}
-                        aria-expanded={activeDropdown === item.name}
+                        onClick={() => setMobileDropdown(mobileDropdown === item.name ? null : item.name)}
+                        aria-expanded={mobileDropdown === item.name}
                       >
                         <div className="flex items-center justify-between">
                           <span>{item.name}</span>
                           <ChevronDown className={`h-4 w-4 transform transition-transform ${
-                            activeDropdown === item.name ? 'rotate-180' : ''
+                            mobileDropdown === item.name ? 'rotate-180' : ''
                           }`} />
                         </div>
                       </button>
-                      {activeDropdown === item.name && (
+                      {mobileDropdown === item.name && (
                         <div className="pl-4">
                           {item.children.map((child) => (
                             <Link
@@ -130,7 +116,7 @@ export function Navigation() {
                               className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 dark:hover:bg-gray-800"
                               onClick={() => {
                                 setMobileMenuOpen(false);
-                                setActiveDropdown(null);
+                                setMobileDropdown(null);
                               }}
                             >
                               {child.name}
