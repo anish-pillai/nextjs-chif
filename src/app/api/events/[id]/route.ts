@@ -1,4 +1,5 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+type RouteContext = { params: { id: string } };
 import { prisma } from '@/lib/db';
 import { 
   handleRequest, 
@@ -12,11 +13,12 @@ export const dynamic = 'force-dynamic';
 
 // GET /api/events/[id] - Get event by ID
 export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } }
+
+  request: NextRequest,
+  context: RouteContext
 ) {
-  const { id } = params;
-  return handleRequest(req, async () => {
+  const { id } = context.params;
+  return handleRequest(request, async () => {
     const event = await prisma.event.findUnique({
       where: { id },
       include: {
@@ -41,12 +43,13 @@ export async function GET(
 
 // PUT /api/events/[id] - Update event
 export async function PUT(
-  req: NextRequest,
-  { params }: { params: { id: string } }
+
+  request: NextRequest,
+  context: RouteContext
 ) {
-  const { id } = params;
-  return handleRequest(req, async () => {
-    const json = await req.json();
+  const { id } = context.params;
+  return handleRequest(request, async () => {
+    const json = await request.json();
     const data = updateEventSchema.parse(json);
     
     // Check if event exists
@@ -98,11 +101,12 @@ export async function PUT(
 
 // DELETE /api/events/[id] - Delete event
 export async function DELETE(
-  req: NextRequest,
-  { params }: { params: { id: string } }
+
+  request: NextRequest,
+  context: RouteContext
 ) {
-  const { id } = params;
-  return handleRequest(req, async () => {
+  const { id } = context.params;
+  return handleRequest(request, async () => {
     // Check if event exists
     const existingEvent = await prisma.event.findUnique({
       where: { id }

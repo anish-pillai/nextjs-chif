@@ -1,4 +1,5 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+type RouteContext = { params: { id: string } };
 import { prisma } from '@/lib/db';
 import { 
   handleRequest, 
@@ -13,11 +14,11 @@ export const dynamic = 'force-dynamic';
 
 // GET /api/users/[id] - Get user by ID
 export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  context: RouteContext
 ) {
-  return handleRequest(req, async () => {
-    const { id } = params;
+  return handleRequest(request, async () => {
+    const { id } = context.params;
     
     const user = await prisma.user.findUnique({
       where: { id },
@@ -37,12 +38,12 @@ export async function GET(
 
 // PUT /api/users/[id] - Update user
 export async function PUT(
-  req: NextRequest,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  context: RouteContext
 ) {
-  return handleRequest(req, async () => {
-    const { id } = params;
-    const json = await req.json();
+  return handleRequest(request, async () => {
+    const { id } = context.params;
+    const json = await request.json();
     const data = updateUserSchema.parse(json);
     
     // Check if user exists
@@ -65,11 +66,11 @@ export async function PUT(
 
 // DELETE /api/users/[id] - Delete user
 export async function DELETE(
-  req: NextRequest,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  context: RouteContext
 ) {
-  return handleRequest(req, async () => {
-    const { id } = params;
+  return handleRequest(request, async () => {
+    const { id } = context.params;
     
     // Check if user exists
     const existingUser = await prisma.user.findUnique({
