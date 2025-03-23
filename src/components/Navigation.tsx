@@ -3,6 +3,7 @@
 import { Menu, X, ChevronDown } from 'lucide-react';
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 
 const navigation = [
@@ -33,7 +34,7 @@ export function Navigation() {
   return (
     <nav className="flex-1">
       {/* Desktop Navigation */}
-      <div className="hidden md:flex items-center space-x-1">
+      <div className="hidden md:flex items-center space-x-4">
         {navigation.map((item) => (
           <div key={item.name} className="relative group">
             {item.children ? (

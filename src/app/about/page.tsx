@@ -1,7 +1,31 @@
 import { Users, Heart, BookOpen } from 'lucide-react';
-import { leadershipTeam } from '@/data/team';
+import { prisma } from '@/lib/prisma';
 
-export default function About() {
+interface TeamMember {
+  id: string;
+  name: string;
+  role: string;
+  image: string;
+  description: string | null;
+  email: string | null;
+  order: number;
+  createdAt: number;
+  updatedAt: number;
+}
+
+async function getLeadershipTeam(): Promise<TeamMember[]> {
+  try {
+    return await prisma.leadershipTeam.findMany({
+      orderBy: { order: 'asc' }
+    });
+  } catch (error) {
+    console.error('Error fetching leadership team:', error);
+    return [];
+  }
+}
+
+export default async function About() {
+  const leadershipTeam = await getLeadershipTeam();
   return (
     <div>
       {/* Hero Section */}
@@ -55,15 +79,25 @@ export default function About() {
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">Our Leadership Team</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {leadershipTeam.map((member) => (
-              <div key={member.id} className="text-center">
-                <img
-                  src={member.image}
-                  alt={member.name}
-                  className="w-48 h-48 rounded-full mx-auto mb-4 object-cover"
-                />
-                <h3 className="text-xl font-bold mb-2">{member.name}</h3>
-                <p className="text-gray-600 dark:text-gray-300">{member.role}</p>
+            {leadershipTeam.map((member: TeamMember) => (
+              <div key={member.id} className="text-center group cursor-pointer">
+                <div className="relative w-48 h-48 mx-auto mb-4 overflow-hidden rounded-full">
+                  <img
+                    src={member.image}
+                    alt={member.name}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-primary-500/0 group-hover:bg-primary-500/20 transition-colors duration-300 rounded-full" />
+                </div>
+                <h3 className="text-xl font-bold mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                  {member.name}
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300 mb-2">{member.role}</p>
+                {member.description && (
+                  <p className="text-sm text-gray-500 dark:text-gray-400 max-w-sm mx-auto">
+                    {member.description}
+                  </p>
+                )}
               </div>
             ))}
           </div>

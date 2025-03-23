@@ -1,6 +1,54 @@
 import { Calendar, MapPin, Clock } from 'lucide-react';
+import { format } from 'date-fns';
+import { prisma } from '@/lib/db';
+import { getCurrentTimestamp } from '@/lib/utils';
 
-export default function Home() {
+async function getLatestEvents() {
+  try {
+    // First try to get upcoming events
+    const upcomingEvents = await prisma.event.findMany({
+      take: 3,
+      orderBy: { startTime: 'asc' },
+      where: {
+        startTime: {
+          gte: getCurrentTimestamp()
+        }
+      },
+      include: {
+        organizer: {
+          select: {
+            id: true,
+            name: true,
+          }
+        }
+      }
+    });
+
+    // If no upcoming events, get the latest events regardless of date
+    if (upcomingEvents.length === 0) {
+      return await prisma.event.findMany({
+        take: 3,
+        orderBy: { startTime: 'desc' },
+        include: {
+          organizer: {
+            select: {
+              id: true,
+              name: true,
+            }
+          }
+        }
+      });
+    }
+
+    return upcomingEvents;
+  } catch (error) {
+    console.error('Error fetching events:', error);
+    return [];
+  }
+}
+
+export default async function Home() {
+  const latestEvents = await getLatestEvents();
   return (
     <div>
       {/* Hero Section */}
@@ -36,23 +84,39 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-8 text-center">Upcoming Events</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-white dark:bg-gray-900 rounded-lg shadow-md overflow-hidden">
-                <div className="p-6">
-                  <div className="flex items-center space-x-2 text-primary-600 dark:text-primary-400 mb-4">
-                    <Calendar className="h-5 w-5" />
-                    <span className="font-medium">March {10 + i}, 2024</span>
+            {latestEvents.length > 0 ? (
+              latestEvents.map((event) => (
+                <div key={event.id} className="bg-white dark:bg-gray-900 rounded-lg shadow-md overflow-hidden">
+                  <div className="p-6">
+                    <div className="flex items-center space-x-2 text-primary-600 dark:text-primary-400 mb-4">
+                      <Calendar className="h-5 w-5" />
+                      <span className="font-medium">{format(event.startTime * 1000, 'MMMM d, yyyy')}</span>
+                    </div>
+                    <h3 className="text-xl font-bold mb-2">{event.title}</h3>
+                    <div className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 mb-2">
+                      <Clock className="h-4 w-4" />
+                      <span>
+                        {format(event.startTime * 1000, 'h:mm a')} - {format(event.endTime * 1000, 'h:mm a')}
+                      </span>
+                    </div>
+                    <div className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 mb-4">
+                      <MapPin className="h-4 w-4" />
+                      <span>{event.location}</span>
+                    </div>
+                    <p className="text-gray-600 dark:text-gray-300 mb-4">
+                      {event.description}
+                    </p>
+                    <button className="w-full bg-primary-600 hover:bg-primary-700 text-white py-2 rounded-md transition-colors">
+                      Learn More
+                    </button>
                   </div>
-                  <h3 className="text-xl font-bold mb-2">Community Event {i}</h3>
-                  <p className="text-gray-600 dark:text-gray-300 mb-4">
-                    Join us for a wonderful time of fellowship and worship.
-                  </p>
-                  <button className="w-full bg-primary-600 hover:bg-primary-700 text-white py-2 rounded-md transition-colors">
-                    Learn More
-                  </button>
                 </div>
+              ))
+            ) : (
+              <div className="col-span-3 text-center text-gray-600 dark:text-gray-400">
+                <p>No upcoming events found.</p>
               </div>
-            ))}
+            )}
           </div>
         </div>
       </section>
@@ -81,6 +145,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+
     </div>
   );
 }

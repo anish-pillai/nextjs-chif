@@ -3,15 +3,20 @@ import { Inter } from 'next/font/google';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { Navigation } from '@/components/Navigation';
 import { ThemeToggle } from '@/components/ThemeToggle';
-import { Church, Heart } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import Link from 'next/link';
 import './globals.css';
+import Image from 'next/image';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'City Harvest International Fellowship',
   description: 'A welcoming Christian community in the heart of the city.',
+  icons: {
+    icon: '/images/logo.png',
+    apple: '/images/logo.png',
+  },
 };
 
 export default function RootLayout({
@@ -31,7 +36,13 @@ export default function RootLayout({
               <div className="container mx-auto px-2 h-16 flex items-center justify-between">
                 <div className="flex items-center">
                   <Link href="/" className="flex items-center space-x-2 mr-8">
-                    <Church className="h-8 w-8 text-primary-600 dark:text-primary-400" />
+                  <Image
+            src="/images/logo.png"
+            alt="CHIF Logo"
+            width={40}
+            height={40}
+            className="rounded-full"
+          />
                     <span className="text-xl font-bold">CHIF</span>
                   </Link>
                   <Navigation />

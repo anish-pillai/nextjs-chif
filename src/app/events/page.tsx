@@ -1,6 +1,49 @@
 import React from 'react';
+import { format } from 'date-fns';
+import { prisma } from '@/lib/db';
+import { EventsCalendar } from './components/EventsCalendar';
+import { EventForm } from './components/EventForm';
+import { Event, EventType, EventWhereInput } from '@/types';
 
-const EventsPage = () => {
+export const dynamic = 'force-dynamic'; // Disable SSG to always fetch fresh data
+
+async function getEvents(type?: EventType): Promise<Event[]> {
+  const where: EventWhereInput = type ? { type } : {};
+  
+  try {
+    return await prisma.event.findMany({
+      where,
+      include: {
+        organizer: {
+          select: {
+            id: true,
+            name: true,
+          }
+        }
+      },
+      orderBy: { startTime: 'asc' }
+    });
+  } catch (error) {
+    console.error('Error fetching events:', error);
+    return [];
+  }
+}
+
+async function getEventTypes(): Promise<EventType[]> {
+  // Get unique types from existing events
+  const types = await prisma.event.groupBy({
+    by: ['type'],
+  });
+  
+  return types.map((t) => t.type as EventType);
+}
+
+export default async function EventsPage() {
+  const [events, eventTypes] = await Promise.all([
+    getEvents(),
+    getEventTypes()
+  ]);
+  
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
       {/* Hero Section */}
@@ -18,141 +61,88 @@ const EventsPage = () => {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <div className="flex gap-4 justify-center flex-wrap">
-              <button className="px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-all duration-200 shadow-sm hover:shadow-md">
+              <a href="/events" className="px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-all duration-200 shadow-sm hover:shadow-md">
                 All Events
-              </button>
-              <button className="px-6 py-3 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 shadow-sm hover:shadow-md border border-gray-200 dark:border-gray-700">
-                Worship
-              </button>
-              <button className="px-6 py-3 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 shadow-sm hover:shadow-md border border-gray-200 dark:border-gray-700">
-                Youth
-              </button>
-              <button className="px-6 py-3 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 shadow-sm hover:shadow-md border border-gray-200 dark:border-gray-700">
-                Study
-              </button>
+              </a>
+              {eventTypes.map((type) => (
+                <a 
+                  key={type}
+                  href={`/events?type=${type}`}
+                  className="px-6 py-3 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 shadow-sm hover:shadow-md border border-gray-200 dark:border-gray-700"
+                >
+                  {type.charAt(0) + type.slice(1).toLowerCase()}
+                </a>
+              ))}
             </div>
           </div>
         </div>
       </div>
 
-      {/* Events Grid */}
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-        {/* Sunday Worship Service */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg border border-gray-100 dark:border-gray-700">
-          <div className="text-primary-600 dark:text-primary-400 mb-4">Every Sunday</div>
-          <h3 className="text-2xl font-bold mb-3 text-gray-900 dark:text-white">Sunday Worship Service</h3>
-          <p className="text-gray-600 dark:text-gray-300 mb-4">
-            Join us for worship, prayer, and the Word.
-          </p>
-          <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300 mb-2">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            10:00 AM
+      {/* Calendar and Form Section */}
+      <div className="container mx-auto px-4 py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Calendar View */}
+          <div className="lg:col-span-2">
+            <EventsCalendar events={events} />
           </div>
-          <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300 mb-4">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-            Main Sanctuary
+
+          {/* Event Form */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+            <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
+              Create New Event
+            </h2>
+            <EventForm />
           </div>
-          <button className="w-full bg-primary-600 hover:bg-primary-700 text-white transition py-2 rounded-md">
-            Register Now
-          </button>
         </div>
 
-        {/* Youth Night */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg border border-gray-100 dark:border-gray-700">
-          <div className="text-primary-600 dark:text-primary-400 mb-4">Every Friday</div>
-          <h3 className="text-2xl font-bold mb-3 text-gray-900 dark:text-white">Youth Night</h3>
-          <p className="text-gray-600 dark:text-gray-300 mb-4">
-            A night of fellowship, games, and spiritual growth for teens.
-          </p>
-          <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300 mb-2">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            7:00 PM
+        {/* Upcoming Events List */}
+        <div className="mt-12">
+          <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
+            Upcoming Events
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {events.length === 0 ? (
+              <div className="col-span-3 text-center py-12">
+                <h3 className="text-2xl font-bold mb-3 text-gray-900 dark:text-white">No events found</h3>
+                <p className="text-gray-600 dark:text-gray-300">Check back soon for upcoming events!</p>
+              </div>
+            ) : (
+              events.map((event: Event) => (
+                <div
+                  key={event.id}
+                  className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg border border-gray-100 dark:border-gray-700"
+                >
+                  <div className="text-primary-600 dark:text-primary-400 mb-4">
+                    {format(new Date(event.startTime), 'MMMM d, yyyy')}
+                  </div>
+                  <h3 className="text-2xl font-bold mb-3 text-gray-900 dark:text-white">{event.title}</h3>
+                  <p className="text-gray-600 dark:text-gray-300 mb-4">
+                    {event.description}
+                  </p>
+                  <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300 mb-2">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {format(new Date(event.startTime), 'h:mm a')} - {format(new Date(event.endTime), 'h:mm a')}
+                  </div>
+                  <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300 mb-4">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    {event.location}
+                  </div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                    Organized by: {event.organizer.name}
+                  </div>
+                </div>
+              ))
+            )}
           </div>
-          <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300 mb-4">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-            Youth Center
-          </div>
-          <button className="w-full bg-primary-600 hover:bg-primary-700 text-white transition py-2 rounded-md">
-            Register Now
-          </button>
         </div>
-
-        {/* Bible Study */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg border border-gray-100 dark:border-gray-700">
-          <div className="text-primary-600 dark:text-primary-400 mb-4">Every Wednesday</div>
-          <h3 className="text-2xl font-bold mb-3 text-gray-900 dark:text-white">Bible Study</h3>
-          <p className="text-gray-600 dark:text-gray-300 mb-4">
-            In-depth Bible study and discussion.
-          </p>
-          <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300 mb-2">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            7:00 PM
-          </div>
-          <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300 mb-4">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-            Fellowship Hall
-          </div>
-          <button className="w-full bg-primary-600 hover:bg-primary-700 text-white transition py-2 rounded-md">
-            Register Now
-          </button>
-        </div>
-      </div>
-
-      {/* Submit Event Form */}
-      <div className="max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-lg p-8 shadow-lg border border-gray-100 dark:border-gray-700">
-        <h2 className="text-3xl font-bold text-center mb-4 text-gray-900 dark:text-white">Submit an Event</h2>
-        <p className="text-gray-600 dark:text-gray-300 text-center mb-8">
-          Have an event you&apos;d like to add to our calendar? Submit it for review.
-        </p>
-        <form className="space-y-4">
-          <input
-            type="text"
-            placeholder="Event Name"
-            className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md px-4 py-2 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
-          />
-          <input
-            type="date"
-            className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md px-4 py-2 text-gray-900 dark:text-white"
-          />
-          <input
-            type="time"
-            className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md px-4 py-2 text-gray-900 dark:text-white"
-          />
-          <input
-            type="text"
-            placeholder="Location"
-            className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md px-4 py-2 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
-          />
-          <textarea
-            placeholder="Event Description"
-            rows={4}
-            className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md px-4 py-2 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
-          />
-          <button
-            type="submit"
-            className="w-full bg-primary-600 hover:bg-primary-700 text-white transition py-3 rounded-md font-semibold"
-          >
-            Submit Event
-          </button>
-        </form>
       </div>
     </div>
   );
-};
+}
 
-export default EventsPage;
+

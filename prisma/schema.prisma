@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  role      Role     @default(MEMBER)
+  createdAt Int
+  updatedAt Int
+  events    Event[]  @relation("EventOrganizer")
+  sermons   Sermon[]
+}
+
+model Event {
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  startTime   Int
+  endTime     Int
+  location    String
+  type        EventType @default(OTHER)
+  organizerId String
+  organizer   User      @relation("EventOrganizer", fields: [organizerId], references: [id])
+  createdAt   Int
+  updatedAt   Int
+
+  @@index([organizerId])
+}
+
+model Sermon {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  videoUrl    String?
+  audioUrl    String?
+  preacherId  String
+  preacher    User     @relation(fields: [preacherId], references: [id])
+  date        Int
+  scripture   String
+  series      String?
+  createdAt   Int
+  updatedAt   Int
+
+  @@index([preacherId])
+}
+
+enum Role {
+  ADMIN
+  PASTOR
+  STAFF
+  MEMBER
+}
+
+model leadershipTeam {
+  id          String   @id @default(cuid())
+  name        String
+  role        String
+  image       String
+  description String?
+  email       String?
+  order       Int      @default(0)
+  createdAt   Int
+  updatedAt   Int
+
+  @@index([order])
+}
+
+enum EventType {
+  WORSHIP
+  YOUTH
+  CHILDREN
+  ADULT
+  PRAYER
+  STUDY
+  OTHER
+}
