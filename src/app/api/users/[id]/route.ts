@@ -1,6 +1,8 @@
 import { NextRequest } from 'next/server';
 
-type Params = { params: { id: string } };
+interface RouteParams {
+  id: string;
+}
 import { prisma } from '@/lib/db';
 import { 
   handleRequest, 
@@ -16,7 +18,7 @@ export const dynamic = 'force-dynamic';
 // GET /api/users/[id] - Get user by ID
 export async function GET(
   request: NextRequest,
-  { params }: Params
+  { params }: { params: RouteParams }
 ): Promise<Response> {
   return handleRequest(request, async () => {
     const { id } = params;
@@ -40,7 +42,7 @@ export async function GET(
 // PUT /api/users/[id] - Update user
 export async function PUT(
   request: NextRequest,
-  { params }: Params
+  { params }: { params: RouteParams }
 ): Promise<Response> {
   return handleRequest(request, async () => {
     const { id } = params;
@@ -68,7 +70,7 @@ export async function PUT(
 // DELETE /api/users/[id] - Delete user
 export async function DELETE(
   request: NextRequest,
-  { params }: Params
+  { params }: { params: RouteParams }
 ): Promise<Response> {
   return handleRequest(request, async () => {
     const { id } = params;

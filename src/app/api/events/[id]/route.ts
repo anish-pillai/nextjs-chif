@@ -1,6 +1,8 @@
 import { NextRequest } from 'next/server';
 
-type Params = { params: { id: string } };
+interface RouteParams {
+  id: string;
+}
 import { prisma } from '@/lib/db';
 import { 
   handleRequest, 
@@ -15,7 +17,7 @@ export const dynamic = 'force-dynamic';
 // GET /api/events/[id] - Get event by ID
 export async function GET(
   request: NextRequest,
-  { params }: Params
+  { params }: { params: RouteParams }
 ): Promise<Response> {
   const { id } = params;
   return handleRequest(request, async () => {
@@ -44,7 +46,7 @@ export async function GET(
 // PUT /api/events/[id] - Update event
 export async function PUT(
   request: NextRequest,
-  { params }: Params
+  { params }: { params: RouteParams }
 ): Promise<Response> {
   const { id } = params;
   return handleRequest(request, async () => {
@@ -101,7 +103,7 @@ export async function PUT(
 // DELETE /api/events/[id] - Delete event
 export async function DELETE(
   request: NextRequest,
-  { params }: Params
+  { params }: { params: RouteParams }
 ): Promise<Response> {
   const { id } = params;
   return handleRequest(request, async () => {
