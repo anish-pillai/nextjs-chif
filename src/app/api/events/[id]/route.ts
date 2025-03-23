@@ -1,5 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { type NextApiRequest } from 'next';
+import { NextRequest } from 'next/server';
 
 type Params = { params: { id: string } };
 import { prisma } from '@/lib/db';
