@@ -71,7 +71,15 @@ export async function PUT(
     
     const updatedEvent = await prisma.event.update({
       where: { id },
-      data,
+      data: {
+        title: data.title,
+        description: data.description,
+        startTime: data.startTime,
+        endTime: data.endTime,
+        location: data.location,
+        organizerId: data.organizerId,
+        updatedAt: Math.floor(Date.now() / 1000)
+      },
       include: {
         organizer: {
           select: {
