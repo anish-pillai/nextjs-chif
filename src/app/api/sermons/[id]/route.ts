@@ -13,10 +13,10 @@ export const dynamic = 'force-dynamic';
 // GET /api/sermons/[id] - Get sermon by ID
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   return handleRequest(req, async () => {
-    const id = params.id;
+    const id = context.params.id;
     
     const sermon = await prisma.sermon.findUnique({
       where: { id },
@@ -43,10 +43,10 @@ export async function GET(
 // PUT /api/sermons/[id] - Update sermon
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   return handleRequest(req, async () => {
-    const id = params.id;
+    const id = context.params.id;
     const json = await req.json();
     const data = updateSermonSchema.parse(json);
     
@@ -72,7 +72,17 @@ export async function PUT(
     
     const updatedSermon = await prisma.sermon.update({
       where: { id },
-      data,
+      data: {
+        title: data.title,
+        description: data.description,
+        videoUrl: data.videoUrl,
+        audioUrl: data.audioUrl,
+        preacherId: data.preacherId,
+        date: data.date ? Math.floor(data.date.getTime() / 1000) : undefined,
+        scripture: data.scripture,
+        series: data.series,
+        updatedAt: Math.floor(Date.now() / 1000)
+      },
       include: {
         preacher: {
           select: {
@@ -92,10 +102,10 @@ export async function PUT(
 // DELETE /api/sermons/[id] - Delete sermon
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   return handleRequest(req, async () => {
-    const id = params.id;
+    const id = context.params.id;
     
     // Check if sermon exists
     const existingSermon = await prisma.sermon.findUnique({
