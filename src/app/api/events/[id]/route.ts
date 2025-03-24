@@ -1,8 +1,4 @@
 import { NextRequest } from 'next/server';
-
-type RequestContext = {
-  params: { id: string };
-}
 import { prisma } from '@/lib/db';
 import { 
   handleRequest, 
@@ -17,9 +13,9 @@ export const dynamic = 'force-dynamic';
 // GET /api/events/[id] - Get event by ID
 export async function GET(
   request: NextRequest,
-  context: RequestContext
+  { params }: { params: { id: string } }
 ): Promise<Response> {
-  const { id } = context.params;
+  const { id } = params;
   return handleRequest(request, async () => {
     const event = await prisma.event.findUnique({
       where: { id },
@@ -46,9 +42,9 @@ export async function GET(
 // PUT /api/events/[id] - Update event
 export async function PUT(
   request: NextRequest,
-  context: RequestContext
+  { params }: { params: { id: string } }
 ): Promise<Response> {
-  const { id } = context.params;
+  const { id } = params;
   return handleRequest(request, async () => {
     const json = await request.json();
     const data = updateEventSchema.parse(json);
@@ -103,9 +99,9 @@ export async function PUT(
 // DELETE /api/events/[id] - Delete event
 export async function DELETE(
   request: NextRequest,
-  context: RequestContext
+  { params }: { params: { id: string } }
 ): Promise<Response> {
-  const { id } = context.params;
+  const { id } = params;
   return handleRequest(request, async () => {
     // Check if event exists
     const existingEvent = await prisma.event.findUnique({
