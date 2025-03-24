@@ -16,6 +16,8 @@ async function main() {
       email: 'admin@chif.org',
       name: 'Admin',
       role: Role.ADMIN,
+      createdAt: Math.floor(Date.now() / 1000),
+      updatedAt: Math.floor(Date.now() / 1000),
     },
   });
 
