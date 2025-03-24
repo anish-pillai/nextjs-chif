@@ -76,12 +76,13 @@ export default async function SermonsPage() {
   ]);
 
   // Convert numeric dates to Date objects for the client component
-  const sermons = fetchedSermons.map(sermon => ({
+  // Handle empty arrays and ensure safe conversion
+  const sermons = Array.isArray(fetchedSermons) ? fetchedSermons.map(sermon => ({
     ...sermon,
-    date: new Date(sermon.date * 1000), // Convert from Unix timestamp (seconds) to JavaScript Date
-    createdAt: new Date(sermon.createdAt * 1000),
-    updatedAt: new Date(sermon.updatedAt * 1000)
-  }));
+    date: sermon.date ? new Date(sermon.date * 1000) : new Date(), // Convert from Unix timestamp (seconds) to JavaScript Date with fallback
+    createdAt: sermon.createdAt ? new Date(sermon.createdAt * 1000) : new Date(),
+    updatedAt: sermon.updatedAt ? new Date(sermon.updatedAt * 1000) : new Date()
+  })) : [];
 
   return <SermonsPageClient sermons={sermons} seriesList={seriesList} />;
 }
