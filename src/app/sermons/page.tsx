@@ -70,10 +70,18 @@ async function getSeriesList() {
 }
 
 export default async function SermonsPage() {
-  const [sermons, seriesList] = await Promise.all([
+  const [fetchedSermons, seriesList] = await Promise.all([
     getSermons(),
     getSeriesList()
   ]);
+
+  // Convert numeric dates to Date objects for the client component
+  const sermons = fetchedSermons.map(sermon => ({
+    ...sermon,
+    date: new Date(sermon.date * 1000), // Convert from Unix timestamp (seconds) to JavaScript Date
+    createdAt: new Date(sermon.createdAt * 1000),
+    updatedAt: new Date(sermon.updatedAt * 1000)
+  }));
 
   return <SermonsPageClient sermons={sermons} seriesList={seriesList} />;
 }
