@@ -1,3 +1,4 @@
+import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/db';
 import { 
   handleRequest, 
@@ -10,10 +11,7 @@ import { updateSermonSchema } from '@/lib/validations';
 export const dynamic = 'force-dynamic';
 
 // GET /api/sermons/[id] - Get sermon by ID
-export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: NextRequest, { params }: any) {
   return handleRequest(request, async () => {
     const { id } = params;
     
@@ -40,10 +38,7 @@ export async function GET(
 }
 
 // PUT /api/sermons/[id] - Update sermon
-export async function PUT(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function PUT(request: NextRequest, { params }: any) {
   return handleRequest(request, async () => {
     const { id } = params;
     const json = await request.json();
@@ -99,10 +94,7 @@ export async function PUT(
 }
 
 // DELETE /api/sermons/[id] - Delete sermon
-export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest, { params }: any) {
   return handleRequest(request, async () => {
     const { id } = params;
     
