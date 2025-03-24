@@ -1,4 +1,3 @@
-import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { 
   handleRequest, 
@@ -11,9 +10,9 @@ import { updateSermonSchema } from '@/lib/validations';
 export const dynamic = 'force-dynamic';
 
 // GET /api/sermons/[id] - Get sermon by ID
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(request: Request, context: { params: { id: string } }) {
   return handleRequest(request, async () => {
-    const { id } = params;
+    const { id } = context.params;
     
     const sermon = await prisma.sermon.findUnique({
       where: { id },
@@ -38,9 +37,9 @@ export async function GET(request: Request, { params }: { params: { id: string }
 }
 
 // PUT /api/sermons/[id] - Update sermon
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: Request, context: { params: { id: string } }) {
   return handleRequest(request, async () => {
-    const { id } = params;
+    const { id } = context.params;
     const json = await request.json();
     const data = updateSermonSchema.parse(json);
     
@@ -94,9 +93,9 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 }
 
 // DELETE /api/sermons/[id] - Delete sermon
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request, context: { params: { id: string } }) {
   return handleRequest(request, async () => {
-    const { id } = params;
+    const { id } = context.params;
     
     // Check if sermon exists
     const existingSermon = await prisma.sermon.findUnique({
