@@ -1,4 +1,5 @@
-import { NextRequest } from 'next/server';
+// Using the standard Web API types for route handlers
+import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { 
   handleRequest, 
@@ -13,7 +14,7 @@ export const dynamic = 'force-dynamic';
 
 // GET /api/users/[id] - Get user by ID
 export async function GET(
-  request: NextRequest,
+  request: Request,
   { params }: { params: { id: string } }
 ): Promise<Response> {
   return handleRequest(request, async () => {
@@ -37,7 +38,7 @@ export async function GET(
 
 // PUT /api/users/[id] - Update user
 export async function PUT(
-  request: NextRequest,
+  request: Request,
   { params }: { params: { id: string } }
 ): Promise<Response> {
   return handleRequest(request, async () => {
@@ -65,7 +66,7 @@ export async function PUT(
 
 // DELETE /api/users/[id] - Delete user
 export async function DELETE(
-  request: NextRequest,
+  request: Request,
   { params }: { params: { id: string } }
 ): Promise<Response> {
   return handleRequest(request, async () => {

@@ -48,7 +48,7 @@ export function handleZodError(error: ZodError): NextResponse<ApiResponse<never>
 }
 
 export async function handleRequest<T>(
-  req: NextRequest,
+  req: Request,
   handler: () => Promise<NextResponse<ApiResponse<T>>>
 ): Promise<NextResponse<ApiResponse<T>>> {
   try {
