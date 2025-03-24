@@ -6,6 +6,8 @@ export const createUserSchema = z.object({
   email: z.string().email('Invalid email format'),
   name: z.string().min(2, 'Name must be at least 2 characters'),
   role: z.nativeEnum(Role).optional().default('MEMBER'),
+  createdAt: z.number().int().min(0).optional().default(() => Math.floor(Date.now() / 1000)),
+  updatedAt: z.number().int().min(0).optional().default(() => Math.floor(Date.now() / 1000)),
 });
 
 export const updateUserSchema = z.object({

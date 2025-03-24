@@ -1,5 +1,4 @@
 import { NextRequest } from 'next/server';
-import type { NextApiRequest } from 'next';
 import { prisma } from '@/lib/db';
 import { 
   handleRequest, 
