@@ -3,15 +3,15 @@ import { format } from 'date-fns';
 import { prisma } from '@/lib/db';
 import { EventsCalendar } from './components/EventsCalendar';
 import { EventForm } from './components/EventForm';
-import { Event, EventType, EventWhereInput } from '@/types';
+import { EventType } from '@prisma/client';
 
 export const dynamic = 'force-dynamic'; // Disable SSG to always fetch fresh data
 
-async function getEvents(type?: EventType): Promise<Event[]> {
-  const where: EventWhereInput = type ? { type } : {};
+async function getEvents(type?: EventType) {
+  const where: any = type ? { type } : {};
   
   try {
-    return await prisma.event.findMany({
+    const events = await prisma.event.findMany({
       where,
       include: {
         organizer: {
@@ -23,6 +23,14 @@ async function getEvents(type?: EventType): Promise<Event[]> {
       },
       orderBy: { startTime: 'asc' }
     });
+    
+    // Convert timestamp fields to Date objects for the client component
+    return events.map(event => ({
+      ...event,
+      startTime: event.startTime,  // Keep as Unix timestamp for the calendar component
+      endTime: event.endTime,      // Keep as Unix timestamp for the calendar component
+      // Add any other conversions needed here
+    }));
   } catch (error) {
     console.error('Error fetching events:', error);
     return [];

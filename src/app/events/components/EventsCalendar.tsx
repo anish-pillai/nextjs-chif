@@ -6,6 +6,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import { EventClickArg, EventContentArg } from '@fullcalendar/core';
 import { EventModal } from './EventModal';
 
+// Import the custom Event type that includes organizer information
 import { Event } from '@/types';
 import { formatDateTime } from '@/lib/utils';
 
