@@ -47,10 +47,10 @@ export function handleZodError(error: ZodError): NextResponse<ApiResponse<never>
   return errorResponse(`Validation error: ${JSON.stringify(formatted)}`, 400);
 }
 
-export async function handleRequest<T>(
-  req: Request,
-  handler: () => Promise<NextResponse<ApiResponse<T>>>
-): Promise<NextResponse<ApiResponse<T>>> {
+export async function handleRequest(
+  req,
+  handler
+) {
   try {
     return await handler();
   } catch (error) {
