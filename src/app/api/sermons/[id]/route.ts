@@ -1,10 +1,8 @@
 import { NextRequest } from 'next/server';
-import type { NextApiRequest } from 'next';
 
-type Context = {
-  params: {
-    id: string;
-  };
+type Props = {
+  params: { id: string };
+  searchParams: { [key: string]: string | string[] | undefined };
 }
 import { prisma } from '@/lib/db';
 import { 
@@ -20,10 +18,10 @@ export const dynamic = 'force-dynamic';
 // GET /api/sermons/[id] - Get sermon by ID
 export async function GET(
   request: NextRequest,
-  context: Context
+  props: Props
 ): Promise<Response> {
   return handleRequest(request, async () => {
-    const { id } = context.params;
+    const { id } = props.params;
     
     const sermon = await prisma.sermon.findUnique({
       where: { id },
@@ -50,10 +48,10 @@ export async function GET(
 // PUT /api/sermons/[id] - Update sermon
 export async function PUT(
   request: NextRequest,
-  context: Context
+  props: Props
 ): Promise<Response> {
   return handleRequest(request, async () => {
-    const { id } = context.params;
+    const { id } = props.params;
     const json = await request.json();
     const data = updateSermonSchema.parse(json);
     
@@ -109,10 +107,10 @@ export async function PUT(
 // DELETE /api/sermons/[id] - Delete sermon
 export async function DELETE(
   request: NextRequest,
-  context: Context
+  props: Props
 ): Promise<Response> {
   return handleRequest(request, async () => {
-    const { id } = context.params;
+    const { id } = props.params;
     
     // Check if sermon exists
     const existingSermon = await prisma.sermon.findUnique({
