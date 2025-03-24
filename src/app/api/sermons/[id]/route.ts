@@ -11,7 +11,7 @@ import { updateSermonSchema } from '@/lib/validations';
 export const dynamic = 'force-dynamic';
 
 // GET /api/sermons/[id] - Get sermon by ID
-export async function GET(request, { params }) {
+export async function GET(request: Request, { params }: { params: { id: string } }) {
   return handleRequest(request, async () => {
     const { id } = params;
     
@@ -38,7 +38,7 @@ export async function GET(request, { params }) {
 }
 
 // PUT /api/sermons/[id] - Update sermon
-export async function PUT(request, { params }) {
+export async function PUT(request: Request, { params }: { params: { id: string } }) {
   return handleRequest(request, async () => {
     const { id } = params;
     const json = await request.json();
@@ -94,7 +94,7 @@ export async function PUT(request, { params }) {
 }
 
 // DELETE /api/sermons/[id] - Delete sermon
-export async function DELETE(request, { params }) {
+export async function DELETE(request: Request, { params }: { params: { id: string } }) {
   return handleRequest(request, async () => {
     const { id } = params;
     

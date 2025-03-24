@@ -4,6 +4,7 @@ import { prisma } from '@/lib/db';
 import { EventsCalendar } from './components/EventsCalendar';
 import { EventForm } from './components/EventForm';
 import { EventType } from '@prisma/client';
+import { Event as ChurchEvent } from '@/types';
 
 export const dynamic = 'force-dynamic'; // Disable SSG to always fetch fresh data
 
@@ -115,7 +116,7 @@ export default async function EventsPage() {
                 <p className="text-gray-600 dark:text-gray-300">Check back soon for upcoming events!</p>
               </div>
             ) : (
-              events.map((event: Event) => (
+              events.map((event: ChurchEvent) => (
                 <div
                   key={event.id}
                   className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg border border-gray-100 dark:border-gray-700"
