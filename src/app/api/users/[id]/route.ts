@@ -14,10 +14,10 @@ export const dynamic = 'force-dynamic';
 // GET /api/users/[id] - Get user by ID
 export async function GET(
   request: NextRequest,
-  context: { params: { id: string } }
+  { params }: { params: { id: string } }
 ): Promise<Response> {
   return handleRequest(request, async () => {
-    const { id } = context.params;
+    const { id } = params;
     
     const user = await prisma.user.findUnique({
       where: { id },
@@ -38,10 +38,10 @@ export async function GET(
 // PUT /api/users/[id] - Update user
 export async function PUT(
   request: NextRequest,
-  context: { params: { id: string } }
+  { params }: { params: { id: string } }
 ): Promise<Response> {
   return handleRequest(request, async () => {
-    const { id } = context.params;
+    const { id } = params;
     const json = await request.json();
     const data = updateUserSchema.parse(json);
     
@@ -66,10 +66,10 @@ export async function PUT(
 // DELETE /api/users/[id] - Delete user
 export async function DELETE(
   request: NextRequest,
-  context: { params: { id: string } }
+  { params }: { params: { id: string } }
 ): Promise<Response> {
   return handleRequest(request, async () => {
-    const { id } = context.params;
+    const { id } = params;
     
     // Check if user exists
     const existingUser = await prisma.user.findUnique({
