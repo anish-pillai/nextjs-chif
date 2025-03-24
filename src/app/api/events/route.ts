@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { 
   handleRequest, 
@@ -13,7 +13,7 @@ import { EventType } from '@prisma/client';
 export const dynamic = 'force-dynamic';
 
 // GET /api/events - Get all events with optional filtering
-export async function GET(req: NextRequest) {
+export async function GET(req) {
   return handleRequest(req, async () => {
     const { searchParams } = new URL(req.url);
     
@@ -57,10 +57,26 @@ export async function GET(req: NextRequest) {
 }
 
 // POST /api/events - Create a new event
-export async function POST(req: NextRequest) {
+export async function POST(req) {
   return handleRequest(req, async () => {
     const json = await req.json();
-    const data = createEventSchema.parse(json);
+    const validatedData = createEventSchema.parse(json);
+    
+    // Create event data with proper structure for Prisma
+    const data = {
+      title: validatedData.title,
+      description: validatedData.description,
+      location: validatedData.location,
+      type: validatedData.type,
+      startTime: validatedData.startTime,
+      endTime: validatedData.endTime,
+      createdAt: validatedData.createdAt ?? Math.floor(Date.now() / 1000),
+      updatedAt: validatedData.updatedAt ?? Math.floor(Date.now() / 1000),
+      // Properly format organizer relationship
+      organizer: validatedData.organizerId ? {
+        connect: { id: validatedData.organizerId }
+      } : undefined
+    };
     
     // Convert timestamps to integers and add createdAt/updatedAt
     const now = Math.floor(Date.now() / 1000);
@@ -72,14 +88,18 @@ export async function POST(req: NextRequest) {
       updatedAt: now
     };
     
-    // Check if organizer exists
-    const organizerExists = await prisma.user.findUnique({
-      where: { id: data.organizerId }
-    });
-    
-    if (!organizerExists) {
-      return errorResponse('Organizer not found');
+    // Check if organizer exists when an organizer is specified
+    if (validatedData.organizerId) {
+      const organizerExists = await prisma.user.findUnique({
+        where: { id: validatedData.organizerId }
+      });
+      
+      if (!organizerExists) {
+        return errorResponse('Organizer not found');
+      }
     }
+    
+
     
     const event = await prisma.event.create({
       data: eventData,

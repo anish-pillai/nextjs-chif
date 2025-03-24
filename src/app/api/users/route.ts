@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { 
   handleRequest, 
@@ -12,7 +12,7 @@ import { createUserSchema } from '@/lib/validations';
 export const dynamic = 'force-dynamic';
 
 // GET /api/users - Get all users
-export async function GET(req: NextRequest) {
+export async function GET(req) {
   return handleRequest(req, async () => {
     const users = await prisma.user.findMany({
       orderBy: { createdAt: 'desc' },
@@ -23,10 +23,18 @@ export async function GET(req: NextRequest) {
 }
 
 // POST /api/users - Create a new user
-export async function POST(req: NextRequest) {
+export async function POST(req) {
   return handleRequest(req, async () => {
     const json = await req.json();
-    const data = createUserSchema.parse(json);
+    const validatedData = createUserSchema.parse(json);
+    // Ensure all required fields are present with their correct types
+    const data = {
+      email: validatedData.email,
+      name: validatedData.name,
+      role: validatedData.role,
+      createdAt: validatedData.createdAt ?? Math.floor(Date.now() / 1000),
+      updatedAt: validatedData.updatedAt ?? Math.floor(Date.now() / 1000),
+    };
     
     // Check if user with email already exists
     const existingUser = await prisma.user.findUnique({
