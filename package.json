@@ -16,7 +16,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prisma:seed": "node prisma/seed.mjs"
+    "prisma:seed": "node prisma/seed.mjs",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@fullcalendar/core": "^6.1.15",
