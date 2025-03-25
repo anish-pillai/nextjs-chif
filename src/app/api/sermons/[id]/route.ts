@@ -9,25 +9,14 @@ import {
 import { updateSermonSchema } from '@/lib/validations';
 
 // Helper function to process date for storage as Unix timestamp
-function processDateForStorage(date: Date | number | undefined): number | undefined {
+function processDateForStorage(date: number | undefined): number | undefined {
   if (!date) return undefined;
   
-  if (date instanceof Date) {
-    // Create a date object at noon to avoid timezone issues
-    const dateObj = new Date(date);
-    dateObj.setHours(12, 0, 0, 0);
-    return Math.floor(dateObj.getTime() / 1000);
-  } 
-  
-  if (typeof date === 'number') {
-    // If it's already a number, ensure it's in seconds not milliseconds
-    return date > 9999999999 
-      ? Math.floor(date / 1000) // Convert from milliseconds to seconds if needed
-      : date; // Already in seconds
-  }
-  
-  // Default to undefined if invalid
-  return undefined;
+  // After Zod validation, date is always a number (Unix timestamp)
+  // Just ensure it's in seconds not milliseconds if it's very large
+  return typeof date === 'number' && date > 9999999999
+    ? Math.floor(date / 1000) // Convert from milliseconds to seconds if needed
+    : date; // Already in seconds
 }
 
 export const dynamic = 'force-dynamic';

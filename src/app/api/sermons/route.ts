@@ -73,22 +73,11 @@ export async function POST(req) {
     const validatedData = createSermonSchema.parse(json);
     
     // Create sermon data with proper structure for Prisma
-    // Ensure date is properly converted to Unix timestamp
-    let dateTimestamp;
-    if (validatedData.date instanceof Date) {
-      // Create a date object at noon to avoid timezone issues
-      const dateObj = new Date(validatedData.date);
-      dateObj.setHours(12, 0, 0, 0);
-      dateTimestamp = Math.floor(dateObj.getTime() / 1000);
-    } else if (typeof validatedData.date === 'number') {
-      // If it's already a number, ensure it's in seconds not milliseconds
-      dateTimestamp = validatedData.date > 9999999999 
-        ? Math.floor(validatedData.date / 1000) // Convert from milliseconds to seconds if needed
-        : validatedData.date; // Already in seconds
-    } else {
-      // Default to current date if invalid
-      dateTimestamp = Math.floor(Date.now() / 1000);
-    }
+    // After Zod validation, date is already a Unix timestamp (number)
+    // Just ensure it's in seconds not milliseconds if for some reason it's very large
+    const dateTimestamp = typeof validatedData.date === 'number' && validatedData.date > 9999999999
+      ? Math.floor(validatedData.date / 1000) // Convert from milliseconds to seconds if needed
+      : validatedData.date; // Already in seconds
     
     // Log for debugging
     console.log('API - Date value:', validatedData.date);
