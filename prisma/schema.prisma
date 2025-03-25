@@ -7,48 +7,106 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// NextAuth.js Models
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// Existing Models with NextAuth integration
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String
-  role      Role     @default(MEMBER)
-  createdAt Int
-  updatedAt Int
-  events    Event[]  @relation("EventOrganizer")
-  sermons   Sermon[]
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String
+  role          Role      @default(MEMBER)
+  emailVerified DateTime?
+  image         String?
+  createdAt     Int       @default(dbgenerated("extract(epoch from now())::integer"))
+  updatedAt     Int       @default(dbgenerated("extract(epoch from now())::integer"))
+  events        Event[]   @relation("EventOrganizer")
+  sermons       Sermon[]
+  accounts      Account[]
+  sessions      Session[]
 }
 
 model Event {
   id          String    @id @default(cuid())
   title       String
   description String
-  startTime   Int
-  endTime     Int
   location    String
   type        EventType @default(OTHER)
   organizerId String
-  organizer   User      @relation("EventOrganizer", fields: [organizerId], references: [id])
+  startTime   Int
+  endTime     Int
   createdAt   Int
   updatedAt   Int
+  organizer   User      @relation("EventOrganizer", fields: [organizerId], references: [id])
 
   @@index([organizerId])
 }
 
 model Sermon {
-  id          String   @id @default(cuid())
+  id          String  @id @default(cuid())
   title       String
   description String
   videoUrl    String?
   audioUrl    String?
   preacherId  String
-  preacher    User     @relation(fields: [preacherId], references: [id])
-  date        Int
   scripture   String
   series      String?
+  date        Int
+  createdAt   Int
+  updatedAt   Int
+  preacher    User    @relation(fields: [preacherId], references: [id])
+
+  @@index([preacherId])
+}
+
+model leadershipTeam {
+  id          String  @id @default(cuid())
+  name        String
+  role        String
+  image       String
+  description String?
+  email       String?
+  order       Int     @default(0)
   createdAt   Int
   updatedAt   Int
 
-  @@index([preacherId])
+  @@index([order])
 }
 
 enum Role {
@@ -56,20 +114,6 @@ enum Role {
   PASTOR
   STAFF
   MEMBER
-}
-
-model leadershipTeam {
-  id          String   @id @default(cuid())
-  name        String
-  role        String
-  image       String
-  description String?
-  email       String?
-  order       Int      @default(0)
-  createdAt   Int
-  updatedAt   Int
-
-  @@index([order])
 }
 
 enum EventType {

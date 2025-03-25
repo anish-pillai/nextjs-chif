@@ -49,7 +49,19 @@ export const updateEventSchema = z.object({
 export const createSermonSchema = z.object({
   title: z.string().min(3, 'Title must be at least 3 characters'),
   description: z.string().min(10, 'Description must be at least 10 characters'),
-  date: z.coerce.date(),
+  date: z.union([
+    // Accept Unix timestamp as number
+    z.number().int().min(0),
+    // Or coerce string/Date to Date object
+    z.coerce.date().transform(date => {
+      // Ensure date is valid
+      if (isNaN(date.getTime())) {
+        throw new Error('Invalid date');
+      }
+      // Return the Unix timestamp in seconds
+      return Math.floor(date.getTime() / 1000);
+    })
+  ]),
   videoUrl: z.string().url('Invalid video URL').optional().nullable(),
   audioUrl: z.string().url('Invalid audio URL').optional().nullable(),
   preacherId: z.string().uuid().or(z.string().cuid()),
@@ -60,7 +72,19 @@ export const createSermonSchema = z.object({
 export const updateSermonSchema = z.object({
   title: z.string().min(3, 'Title must be at least 3 characters').optional(),
   description: z.string().min(10, 'Description must be at least 10 characters').optional(),
-  date: z.coerce.date().optional(),
+  date: z.union([
+    // Accept Unix timestamp as number
+    z.number().int().min(0).optional(),
+    // Or coerce string/Date to Date object
+    z.coerce.date().transform(date => {
+      // Ensure date is valid
+      if (isNaN(date.getTime())) {
+        throw new Error('Invalid date');
+      }
+      // Return the Unix timestamp in seconds
+      return Math.floor(date.getTime() / 1000);
+    }).optional()
+  ]).optional(),
   videoUrl: z.string().url('Invalid video URL').optional().nullable(),
   audioUrl: z.string().url('Invalid audio URL').optional().nullable(),
   preacherId: z.string().uuid().or(z.string().cuid()).optional(),

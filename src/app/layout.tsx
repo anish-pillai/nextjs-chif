@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { ThemeProvider } from '@/components/ThemeProvider';
+import { SessionProvider } from '@/components/SessionProvider';
 import { Navigation } from '@/components/Navigation';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import AuthButton from '@/components/AuthButton';
 import { Heart } from 'lucide-react';
 import Link from 'next/link';
 import './globals.css';
@@ -30,8 +32,9 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
       </head>
       <body className={inter.className}>
-        <ThemeProvider>
-          <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-200">
+        <SessionProvider>
+          <ThemeProvider>
+            <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-200">
             <header className="fixed top-0 w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800 z-50">
               <div className="container mx-auto px-2 h-16 flex items-center justify-between">
                 <div className="flex items-center">
@@ -55,6 +58,7 @@ export default function RootLayout({
                     <Heart className="h-4 w-4" />
                     <span>Give</span>
                   </Link>
+                  <AuthButton />
                   <ThemeToggle />
                 </div>
               </div>
@@ -62,8 +66,9 @@ export default function RootLayout({
             <main className="pt-16">
               {children}
             </main>
-          </div>
-        </ThemeProvider>
+            </div>
+          </ThemeProvider>
+        </SessionProvider>
       </body>
     </html>
   );

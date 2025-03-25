@@ -33,9 +33,26 @@ function getYouTubeVideoId(url: string | null): string | null {
   if (!url) return null;
   try {
     const urlObj = new URL(url);
+    
+    // Handle regular youtube.com URLs
     if (urlObj.hostname === 'youtube.com' || urlObj.hostname === 'www.youtube.com') {
-      return urlObj.searchParams.get('v');
-    } else if (urlObj.hostname === 'youtu.be') {
+      // First check for 'v' parameter (standard videos)
+      const vParam = urlObj.searchParams.get('v');
+      if (vParam) return vParam;
+      
+      // Check for live URLs that use /live/ path format
+      if (urlObj.pathname.includes('/live/')) {
+        const pathParts = urlObj.pathname.split('/');
+        // The ID is usually right after 'live' in the path
+        for (let i = 0; i < pathParts.length; i++) {
+          if (pathParts[i] === 'live' && i + 1 < pathParts.length) {
+            return pathParts[i + 1];
+          }
+        }
+      }
+    } 
+    // Handle youtu.be short URLs
+    else if (urlObj.hostname === 'youtu.be') {
       return urlObj.pathname.slice(1);
     }
   } catch (e) {
@@ -121,7 +138,15 @@ export function SermonsPageClient({ sermons, seriesList }: SermonsPageClientProp
                 </div>
                 <div className="p-6">
                   <div className="text-primary-500 mb-2">
-                    <time>{format(new Date(sermon.date), 'MMMM d, yyyy')}</time>
+                    <time>
+                      {format(
+                        // Convert Unix timestamp in seconds to milliseconds for JavaScript Date
+                        typeof sermon.date === 'number' 
+                          ? new Date(sermon.date * 1000) 
+                          : new Date(sermon.date), 
+                        'MMMM d, yyyy'
+                      )}
+                    </time>
                   </div>
                   <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">
                     {sermon.title}

@@ -53,8 +53,9 @@ export async function GET(req) {
       prisma.sermon.count({ where })
     ]);
     
-    return successResponse({
-      sermons,
+    // Return sermons in a format that matches what the admin page expects
+    return NextResponse.json({
+      data: sermons,
       pagination: {
         total,
         limit,
@@ -72,12 +73,33 @@ export async function POST(req) {
     const validatedData = createSermonSchema.parse(json);
     
     // Create sermon data with proper structure for Prisma
+    // Ensure date is properly converted to Unix timestamp
+    let dateTimestamp;
+    if (validatedData.date instanceof Date) {
+      // Create a date object at noon to avoid timezone issues
+      const dateObj = new Date(validatedData.date);
+      dateObj.setHours(12, 0, 0, 0);
+      dateTimestamp = Math.floor(dateObj.getTime() / 1000);
+    } else if (typeof validatedData.date === 'number') {
+      // If it's already a number, ensure it's in seconds not milliseconds
+      dateTimestamp = validatedData.date > 9999999999 
+        ? Math.floor(validatedData.date / 1000) // Convert from milliseconds to seconds if needed
+        : validatedData.date; // Already in seconds
+    } else {
+      // Default to current date if invalid
+      dateTimestamp = Math.floor(Date.now() / 1000);
+    }
+    
+    // Log for debugging
+    console.log('API - Date value:', validatedData.date);
+    console.log('API - Processed timestamp:', dateTimestamp);
+    
     const data = {
       title: validatedData.title,
       description: validatedData.description,
       videoUrl: validatedData.videoUrl,
       audioUrl: validatedData.audioUrl,
-      date: validatedData.date instanceof Date ? Math.floor(validatedData.date.getTime() / 1000) : validatedData.date,
+      date: dateTimestamp,
       scripture: validatedData.scripture,
       series: validatedData.series,
       createdAt: Math.floor(Date.now() / 1000),

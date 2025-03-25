@@ -8,6 +8,28 @@ import {
 } from '@/lib/api-utils';
 import { updateSermonSchema } from '@/lib/validations';
 
+// Helper function to process date for storage as Unix timestamp
+function processDateForStorage(date: Date | number | undefined): number | undefined {
+  if (!date) return undefined;
+  
+  if (date instanceof Date) {
+    // Create a date object at noon to avoid timezone issues
+    const dateObj = new Date(date);
+    dateObj.setHours(12, 0, 0, 0);
+    return Math.floor(dateObj.getTime() / 1000);
+  } 
+  
+  if (typeof date === 'number') {
+    // If it's already a number, ensure it's in seconds not milliseconds
+    return date > 9999999999 
+      ? Math.floor(date / 1000) // Convert from milliseconds to seconds if needed
+      : date; // Already in seconds
+  }
+  
+  // Default to undefined if invalid
+  return undefined;
+}
+
 export const dynamic = 'force-dynamic';
 
 // GET /api/sermons/[id] - Get sermon by ID
@@ -72,7 +94,7 @@ export async function PUT(request: NextRequest, { params }: any) {
         videoUrl: data.videoUrl,
         audioUrl: data.audioUrl,
         preacherId: data.preacherId,
-        date: data.date ? Math.floor(data.date.getTime() / 1000) : undefined,
+        date: processDateForStorage(data.date),
         scripture: data.scripture,
         series: data.series,
         updatedAt: Math.floor(Date.now() / 1000)
