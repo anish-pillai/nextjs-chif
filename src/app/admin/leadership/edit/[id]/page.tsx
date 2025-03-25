@@ -256,10 +256,6 @@ function LeadershipEditor({ id }: { id: string }) {
 }
 
 // Export default component that handles params
-type Props = {
-  params: { id: string }
-};
-
-export default function EditLeadershipMember({ params }: Props) {
+export default function EditLeadershipMember({ params }: { params: { id: string } }) {
   return <LeadershipEditor id={params.id} />;
 }

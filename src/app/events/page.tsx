@@ -2,7 +2,6 @@ import React from 'react';
 import { format } from 'date-fns';
 import { prisma } from '@/lib/db';
 import { EventsCalendar } from './components/EventsCalendar';
-import { EventForm } from './components/EventForm';
 import { EventType } from '@prisma/client';
 import { Event as ChurchEvent } from '@/types';
 
@@ -87,20 +86,12 @@ export default async function EventsPage() {
         </div>
       </div>
 
-      {/* Calendar and Form Section */}
+      {/* Calendar Section */}
       <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="w-full">
           {/* Calendar View */}
-          <div className="lg:col-span-2">
+          <div className="w-full">
             <EventsCalendar events={events} />
-          </div>
-
-          {/* Event Form */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-            <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
-              Create New Event
-            </h2>
-            <EventForm />
           </div>
         </div>
 

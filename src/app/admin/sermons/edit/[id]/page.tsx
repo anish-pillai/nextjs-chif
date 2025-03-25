@@ -291,11 +291,7 @@ function SermonEditor({ id }: { id: string }) {
 }
 
 // This is the main component that Next.js will render
-type Props = {
-  params: { id: string }
-};
-
-export default function EditSermonPage({ params }: Props) {
+export default function EditSermonPage({ params }: { params: { id: string } }) {
   const id = params.id;
   
   // Pass the ID to the editor component

@@ -17,11 +17,8 @@ interface EventData {
   organizerId: string;
 }
 
-type Props = {
-  params: { id: string }
-};
-
-export default function EditEvent({ params }: Props) {
+// Use the correct interface for Next.js page props
+export default function EditEvent({ params }: { params: { id: string } }) {
   const { id } = params;
   const { data: session, status } = useSession();
   const router = useRouter();
