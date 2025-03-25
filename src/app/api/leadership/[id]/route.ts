@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma';
 
 export async function GET(
   request: NextRequest,
-  context: { params: { id: string } }
+  { params }: { params: { id: string } }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -18,8 +18,7 @@ export async function GET(
       );
     }
 
-    // Extract params directly
-    const params = context.params;
+    // Extract id directly
     const { id } = params;
 
     // Fetch leadership team member by ID
@@ -46,7 +45,7 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  context: { params: { id: string } }
+  { params }: { params: { id: string } }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -66,8 +65,7 @@ export async function PUT(
       );
     }
 
-    // Extract params directly
-    const params = context.params;
+    // Extract id directly
     const { id } = params;
     const body = await request.json();
 
@@ -117,7 +115,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  context: { params: { id: string } }
+  { params }: { params: { id: string } }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -137,8 +135,7 @@ export async function DELETE(
       );
     }
 
-    // Extract params directly
-    const params = context.params;
+    // Extract id directly
     const { id } = params;
 
     // Check if leadership team member exists

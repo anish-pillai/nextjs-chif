@@ -12,9 +12,9 @@ import { updateUserSchema } from '@/lib/validations';
 export const dynamic = 'force-dynamic';
 
 // GET /api/users/[id] - Get user by ID
-export async function GET(request, context: { params: { id: string } }) {
+export async function GET(request, { params }: { params: { id: string } }) {
   return handleRequest(request, async () => {
-    const { id } = context.params;
+    const { id } = params;
     
     const user = await prisma.user.findUnique({
       where: { id },
@@ -33,9 +33,9 @@ export async function GET(request, context: { params: { id: string } }) {
 }
 
 // PUT /api/users/[id] - Update user
-export async function PUT(request, context: { params: { id: string } }) {
+export async function PUT(request, { params }: { params: { id: string } }) {
   return handleRequest(request, async () => {
-    const { id } = context.params;
+    const { id } = params;
     const json = await request.json();
     const data = updateUserSchema.parse(json);
     
@@ -58,9 +58,9 @@ export async function PUT(request, context: { params: { id: string } }) {
 }
 
 // DELETE /api/users/[id] - Delete user
-export async function DELETE(request, context: { params: { id: string } }) {
+export async function DELETE(request, { params }: { params: { id: string } }) {
   return handleRequest(request, async () => {
-    const { id } = context.params;
+    const { id } = params;
     
     // Check if user exists
     const existingUser = await prisma.user.findUnique({

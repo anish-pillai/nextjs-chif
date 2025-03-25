@@ -11,9 +11,8 @@ import { updateEventSchema } from '@/lib/validations';
 export const dynamic = 'force-dynamic';
 
 // GET /api/events/[id] - Get event by ID
-export async function GET(request, context: { params: { id: string } }) {
-  // Extract params directly
-  const params = context.params;
+export async function GET(request, { params }: { params: { id: string } }) {
+  // Extract id directly
   const { id } = params;
   return handleRequest(request, async () => {
     const event = await prisma.event.findUnique({
@@ -39,9 +38,8 @@ export async function GET(request, context: { params: { id: string } }) {
 }
 
 // PUT /api/events/[id] - Update event
-export async function PUT(request, context: { params: { id: string } }) {
-  // Extract params directly
-  const params = context.params;
+export async function PUT(request, { params }: { params: { id: string } }) {
+  // Extract id directly
   const { id } = params;
   return handleRequest(request, async () => {
     const json = await request.json();
@@ -95,9 +93,8 @@ export async function PUT(request, context: { params: { id: string } }) {
 }
 
 // DELETE /api/events/[id] - Delete event
-export async function DELETE(request, context: { params: { id: string } }) {
-  // Extract params directly
-  const params = context.params;
+export async function DELETE(request, { params }: { params: { id: string } }) {
+  // Extract id directly
   const { id } = params;
   return handleRequest(request, async () => {
     // Check if event exists

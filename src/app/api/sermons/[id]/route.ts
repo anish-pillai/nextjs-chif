@@ -33,9 +33,9 @@ function processDateForStorage(date: Date | number | undefined): number | undefi
 export const dynamic = 'force-dynamic';
 
 // GET /api/sermons/[id] - Get sermon by ID
-export async function GET(request: NextRequest, context: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   return handleRequest(request, async () => {
-    const { id } = context.params;
+    const { id } = params;
     
     const sermon = await prisma.sermon.findUnique({
       where: { id },
@@ -60,9 +60,9 @@ export async function GET(request: NextRequest, context: { params: { id: string 
 }
 
 // PUT /api/sermons/[id] - Update sermon
-export async function PUT(request: NextRequest, context: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   return handleRequest(request, async () => {
-    const { id } = context.params;
+    const { id } = params;
     const json = await request.json();
     const data = updateSermonSchema.parse(json);
     
@@ -116,9 +116,9 @@ export async function PUT(request: NextRequest, context: { params: { id: string 
 }
 
 // DELETE /api/sermons/[id] - Delete sermon
-export async function DELETE(request: NextRequest, context: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   return handleRequest(request, async () => {
-    const { id } = context.params;
+    const { id } = params;
     
     // Check if sermon exists
     const existingSermon = await prisma.sermon.findUnique({
