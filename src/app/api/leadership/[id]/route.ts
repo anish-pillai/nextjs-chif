@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma';
 
 export async function GET(
   request: NextRequest,
-  context: { params: Promise<{ id: string }> | { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -18,8 +18,8 @@ export async function GET(
       );
     }
 
-    // Handle params properly - check if it's a Promise and await if needed
-    const params = context.params instanceof Promise ? await context.params : context.params;
+    // Extract params directly
+    const params = context.params;
     const { id } = params;
 
     // Fetch leadership team member by ID
@@ -46,7 +46,7 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  context: { params: Promise<{ id: string }> | { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -66,8 +66,8 @@ export async function PUT(
       );
     }
 
-    // Handle params properly - check if it's a Promise and await if needed
-    const params = context.params instanceof Promise ? await context.params : context.params;
+    // Extract params directly
+    const params = context.params;
     const { id } = params;
     const body = await request.json();
 
@@ -117,7 +117,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  context: { params: Promise<{ id: string }> | { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -137,8 +137,8 @@ export async function DELETE(
       );
     }
 
-    // Handle params properly - check if it's a Promise and await if needed
-    const params = context.params instanceof Promise ? await context.params : context.params;
+    // Extract params directly
+    const params = context.params;
     const { id } = params;
 
     // Check if leadership team member exists

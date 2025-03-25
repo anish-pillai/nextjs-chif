@@ -11,9 +11,9 @@ import { updateEventSchema } from '@/lib/validations';
 export const dynamic = 'force-dynamic';
 
 // GET /api/events/[id] - Get event by ID
-export async function GET(request, context) {
-  // Handle params properly - check if it's a Promise and await if needed
-  const params = context.params instanceof Promise ? await context.params : context.params;
+export async function GET(request, context: { params: { id: string } }) {
+  // Extract params directly
+  const params = context.params;
   const { id } = params;
   return handleRequest(request, async () => {
     const event = await prisma.event.findUnique({
@@ -39,9 +39,9 @@ export async function GET(request, context) {
 }
 
 // PUT /api/events/[id] - Update event
-export async function PUT(request, context) {
-  // Handle params properly - check if it's a Promise and await if needed
-  const params = context.params instanceof Promise ? await context.params : context.params;
+export async function PUT(request, context: { params: { id: string } }) {
+  // Extract params directly
+  const params = context.params;
   const { id } = params;
   return handleRequest(request, async () => {
     const json = await request.json();
@@ -95,9 +95,9 @@ export async function PUT(request, context) {
 }
 
 // DELETE /api/events/[id] - Delete event
-export async function DELETE(request, context) {
-  // Handle params properly - check if it's a Promise and await if needed
-  const params = context.params instanceof Promise ? await context.params : context.params;
+export async function DELETE(request, context: { params: { id: string } }) {
+  // Extract params directly
+  const params = context.params;
   const { id } = params;
   return handleRequest(request, async () => {
     // Check if event exists
