@@ -33,7 +33,7 @@ function processDateForStorage(date: Date | number | undefined): number | undefi
 export const dynamic = 'force-dynamic';
 
 // GET /api/sermons/[id] - Get sermon by ID
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }) {
   return handleRequest(request, async () => {
     const { id } = params;
     
@@ -60,7 +60,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 }
 
 // PUT /api/sermons/[id] - Update sermon
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }) {
   return handleRequest(request, async () => {
     const { id } = params;
     const json = await request.json();
@@ -116,7 +116,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 }
 
 // DELETE /api/sermons/[id] - Delete sermon
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }) {
   return handleRequest(request, async () => {
     const { id } = params;
     

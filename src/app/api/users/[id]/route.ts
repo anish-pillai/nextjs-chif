@@ -12,7 +12,7 @@ import { updateUserSchema } from '@/lib/validations';
 export const dynamic = 'force-dynamic';
 
 // GET /api/users/[id] - Get user by ID
-export async function GET(request, { params }: { params: { id: string } }) {
+export async function GET(request, { params }) {
   return handleRequest(request, async () => {
     const { id } = params;
     
@@ -33,7 +33,7 @@ export async function GET(request, { params }: { params: { id: string } }) {
 }
 
 // PUT /api/users/[id] - Update user
-export async function PUT(request, { params }: { params: { id: string } }) {
+export async function PUT(request, { params }) {
   return handleRequest(request, async () => {
     const { id } = params;
     const json = await request.json();
@@ -58,7 +58,7 @@ export async function PUT(request, { params }: { params: { id: string } }) {
 }
 
 // DELETE /api/users/[id] - Delete user
-export async function DELETE(request, { params }: { params: { id: string } }) {
+export async function DELETE(request, { params }) {
   return handleRequest(request, async () => {
     const { id } = params;
     

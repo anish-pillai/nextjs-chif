@@ -11,7 +11,7 @@ import { updateEventSchema } from '@/lib/validations';
 export const dynamic = 'force-dynamic';
 
 // GET /api/events/[id] - Get event by ID
-export async function GET(request, { params }: { params: { id: string } }) {
+export async function GET(request, { params }) {
   // Extract id directly
   const { id } = params;
   return handleRequest(request, async () => {
@@ -38,7 +38,7 @@ export async function GET(request, { params }: { params: { id: string } }) {
 }
 
 // PUT /api/events/[id] - Update event
-export async function PUT(request, { params }: { params: { id: string } }) {
+export async function PUT(request, { params }) {
   // Extract id directly
   const { id } = params;
   return handleRequest(request, async () => {
@@ -93,7 +93,7 @@ export async function PUT(request, { params }: { params: { id: string } }) {
 }
 
 // DELETE /api/events/[id] - Delete event
-export async function DELETE(request, { params }: { params: { id: string } }) {
+export async function DELETE(request, { params }) {
   // Extract id directly
   const { id } = params;
   return handleRequest(request, async () => {
