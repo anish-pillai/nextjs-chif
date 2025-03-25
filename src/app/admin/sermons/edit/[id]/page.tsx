@@ -18,7 +18,7 @@ interface SermonData {
   series: string | null;
 }
 
-// Create a wrapper component to handle the params
+// Client component that handles the form logic
 function SermonEditor({ id }: { id: string }) {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -291,8 +291,10 @@ function SermonEditor({ id }: { id: string }) {
 }
 
 // This is the main component that Next.js will render
-export default function EditSermonPage({ params }: { params: { id: string } }) {
-  const id = params.id;
+export default async function EditSermonPage({ params }: { params: any }) {
+  // Handle params - could be a Promise in some versions of Next.js
+  const resolvedParams = params instanceof Promise ? await params : params;
+  const id = resolvedParams.id;
   
   // Pass the ID to the editor component
   return <SermonEditor id={id} />;

@@ -17,6 +17,7 @@ interface LeadershipTeamMember {
 }
 
 // Create a wrapper component to handle the params
+// Client component that handles the form logic
 function LeadershipEditor({ id }: { id: string }) {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -256,6 +257,10 @@ function LeadershipEditor({ id }: { id: string }) {
 }
 
 // Export default component that handles params
-export default function EditLeadershipMember({ params }: { params: { id: string } }) {
-  return <LeadershipEditor id={params.id} />;
+export default async function EditLeadershipMember({ params }: { params: any }) {
+  // Handle params - could be a Promise in some versions of Next.js
+  const resolvedParams = params instanceof Promise ? await params : params;
+  const { id } = resolvedParams;
+  
+  return <LeadershipEditor id={id} />;
 }

@@ -17,9 +17,9 @@ interface EventData {
   organizerId: string;
 }
 
-// Use the correct interface for Next.js page props
-export default function EditEvent({ params }: { params: { id: string } }) {
-  const { id } = params;
+// Create a wrapper component that handles the props correctly
+function EditEventContent({ id }: { id: string }) {
+
   const { data: session, status } = useSession();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
@@ -318,4 +318,13 @@ export default function EditEvent({ params }: { params: { id: string } }) {
       </div>
     </div>
   );
+}
+
+// Export the page component that Next.js will render
+export default async function EditEventPage({ params }: { params: any }) {
+  // Handle params - could be a Promise in some versions of Next.js
+  const resolvedParams = params instanceof Promise ? await params : params;
+  const { id } = resolvedParams;
+  
+  return <EditEventContent id={id} />;
 }
