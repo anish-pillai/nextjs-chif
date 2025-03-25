@@ -11,6 +11,7 @@ interface SermonData {
   description: string;
   preacherId: string;
   date: number;
+  dateString?: string; // Add dateString property for form handling
   videoUrl: string | null;
   audioUrl: string | null;
   scripture: string;
@@ -290,9 +291,12 @@ function SermonEditor({ id }: { id: string }) {
 }
 
 // This is the main component that Next.js will render
-export default async function EditSermonPage({ params }: { params: { id: string } }) {
-  // Await params to ensure they're available
-  const id = params?.id;
+type Props = {
+  params: { id: string }
+};
+
+export default function EditSermonPage({ params }: Props) {
+  const id = params.id;
   
   // Pass the ID to the editor component
   return <SermonEditor id={id} />;

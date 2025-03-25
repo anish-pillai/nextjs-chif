@@ -256,8 +256,10 @@ function LeadershipEditor({ id }: { id: string }) {
 }
 
 // Export default component that handles params
-export default async function EditLeadershipMember({ params }: { params: Promise<{ id: string }> | { id: string } }) {
-  // Handle params properly - check if it's a Promise and await if needed
-  const resolvedParams = params instanceof Promise ? await params : params;
-  return <LeadershipEditor id={resolvedParams.id} />;
+type Props = {
+  params: { id: string }
+};
+
+export default function EditLeadershipMember({ params }: Props) {
+  return <LeadershipEditor id={params.id} />;
 }

@@ -17,7 +17,11 @@ interface EventData {
   organizerId: string;
 }
 
-export default function EditEvent({ params }: { params: { id: string } }) {
+type Props = {
+  params: { id: string }
+};
+
+export default function EditEvent({ params }: Props) {
   const { id } = params;
   const { data: session, status } = useSession();
   const router = useRouter();
