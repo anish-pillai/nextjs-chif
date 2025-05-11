@@ -70,8 +70,8 @@ export async function PUT(request, { params }) {
       data: {
         title: data.title,
         description: data.description,
-        startTime: data.startTime,
-        endTime: data.endTime,
+        startTime: data.startDateTime ? Math.floor(new Date(data.startDateTime).getTime() / 1000) : undefined,
+        endTime: data.endDateTime ? Math.floor(new Date(data.endDateTime).getTime() / 1000) : undefined,
         location: data.location,
         organizerId: data.organizerId,
         updatedAt: Math.floor(Date.now() / 1000)
