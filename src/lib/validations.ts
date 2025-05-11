@@ -21,23 +21,23 @@ export const updateUserSchema = z.object({
 export const createEventSchema = z.object({
   title: z.string().min(3, 'Title must be at least 3 characters'),
   description: z.string().min(10, 'Description must be at least 10 characters'),
-  startTime: z.number().int().min(0),
-  endTime: z.number().int().min(0),
+  startDateTime: z.string().datetime(),
+  endDateTime: z.string().datetime(),
   location: z.string().min(3, 'Location must be at least 3 characters'),
   type: z.nativeEnum(EventType).optional().default('OTHER'),
   organizerId: z.string().uuid().or(z.string().cuid()),
   createdAt: z.number().int().min(0).optional(),
   updatedAt: z.number().int().min(0).optional(),
-}).refine((data) => data.endTime > data.startTime, {
+}).refine((data) => new Date(data.endDateTime) > new Date(data.startDateTime), {
   message: 'End time must be after start time',
-  path: ['endTime'],
+  path: ['endDateTime'],
 });
 
 export const updateEventSchema = z.object({
   title: z.string().min(3, 'Title must be at least 3 characters').optional(),
   description: z.string().min(10, 'Description must be at least 10 characters').optional(),
-  startTime: z.number().int().min(0).optional(),
-  endTime: z.number().int().min(0).optional(),
+  startDateTime: z.string().datetime().optional(),
+  endDateTime: z.string().datetime().optional(),
   location: z.string().min(3, 'Location must be at least 3 characters').optional(),
   type: z.nativeEnum(EventType).optional(),
   organizerId: z.string().uuid().or(z.string().cuid()).optional(),

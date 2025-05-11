@@ -69,11 +69,11 @@ export default async function Home() {
           <div className="flex flex-col md:flex-row items-center justify-center gap-4">
             <div className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm px-6 py-3 rounded-lg">
               <Clock className="h-5 w-5" />
-              <span>Sundays at 10:00 AM</span>
+              <span>Sundays at 12:30 PM</span>
             </div>
             <div className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm px-6 py-3 rounded-lg">
               <MapPin className="h-5 w-5" />
-              <span>12 Quince Ct, Lawrence Township NJ 08648</span>
+              <span>2751 Brunswick Pike, Lawrence Township, NJ 08648</span>
             </div>
           </div>
         </div>

@@ -68,8 +68,8 @@ export async function POST(req) {
       description: validatedData.description,
       location: validatedData.location,
       type: validatedData.type,
-      startTime: validatedData.startTime,
-      endTime: validatedData.endTime,
+      startTime: Math.floor(new Date(validatedData.startDateTime).getTime() / 1000),
+      endTime: Math.floor(new Date(validatedData.endDateTime).getTime() / 1000),
       createdAt: validatedData.createdAt ?? Math.floor(Date.now() / 1000),
       updatedAt: validatedData.updatedAt ?? Math.floor(Date.now() / 1000),
       // Properly format organizer relationship
@@ -82,8 +82,8 @@ export async function POST(req) {
     const now = Math.floor(Date.now() / 1000);
     const eventData = {
       ...data,
-      startTime: Math.floor(data.startTime),
-      endTime: Math.floor(data.endTime),
+      startTime: data.startTime,
+      endTime: data.endTime,
       createdAt: now,
       updatedAt: now
     };
