@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { format } from 'date-fns';
+import { DateDisplay, TimeDisplay } from '@/components/TimeDisplay';
 import { X, Calendar, Clock, MapPin, User } from 'lucide-react';
 
 interface EventModalProps {
@@ -51,7 +52,7 @@ export function EventModal({ isOpen, onClose, event }: EventModalProps) {
             <div>
               <div className="font-medium text-gray-900 dark:text-white">Time</div>
               <div className="text-gray-600 dark:text-gray-300">
-                {format(event.start, 'h:mm a')} - {format(event.end, 'h:mm a')}
+                {event.start.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })} - {event.end.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}
               </div>
             </div>
           </div>

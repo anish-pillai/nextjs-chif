@@ -1,5 +1,5 @@
 import { Calendar, MapPin, Clock } from 'lucide-react';
-import { format } from 'date-fns';
+import { DateDisplay, TimeDisplay } from '@/components/TimeDisplay';
 import { prisma } from '@/lib/db';
 import { getCurrentTimestamp } from '@/lib/utils';
 
@@ -90,13 +90,13 @@ export default async function Home() {
                   <div className="p-6">
                     <div className="flex items-center space-x-2 text-primary-600 dark:text-primary-400 mb-4">
                       <Calendar className="h-5 w-5" />
-                      <span className="font-medium">{format(event.startTime * 1000, 'MMMM d, yyyy')}</span>
+                      <span className="font-medium"><DateDisplay timestamp={event.startTime} /></span>
                     </div>
                     <h3 className="text-xl font-bold mb-2">{event.title}</h3>
                     <div className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 mb-2">
                       <Clock className="h-4 w-4" />
                       <span>
-                        {format(event.startTime * 1000, 'h:mm a')} - {format(event.endTime * 1000, 'h:mm a')}
+                        <TimeDisplay timestamp={event.startTime} /> - <TimeDisplay timestamp={event.endTime} />
                       </span>
                     </div>
                     <div className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 mb-4">

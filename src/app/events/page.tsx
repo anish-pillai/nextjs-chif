@@ -1,5 +1,5 @@
 import React from 'react';
-import { format } from 'date-fns';
+import { DateDisplay, TimeDisplay } from '@/components/TimeDisplay';
 import { prisma } from '@/lib/db';
 import { EventsCalendar } from './components/EventsCalendar';
 import { EventType } from '@prisma/client';
@@ -113,7 +113,7 @@ export default async function EventsPage() {
                   className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg border border-gray-100 dark:border-gray-700"
                 >
                   <div className="text-primary-600 dark:text-primary-400 mb-4">
-                    {format(new Date(event.startTime), 'MMMM d, yyyy')}
+                    <DateDisplay timestamp={event.startTime} format="MMMM d, yyyy" />
                   </div>
                   <h3 className="text-2xl font-bold mb-3 text-gray-900 dark:text-white">{event.title}</h3>
                   <p className="text-gray-600 dark:text-gray-300 mb-4">
@@ -123,7 +123,7 @@ export default async function EventsPage() {
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    {format(new Date(event.startTime), 'h:mm a')} - {format(new Date(event.endTime), 'h:mm a')}
+                    <TimeDisplay timestamp={event.startTime} /> - <TimeDisplay timestamp={event.endTime} />
                   </div>
                   <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300 mb-4">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
