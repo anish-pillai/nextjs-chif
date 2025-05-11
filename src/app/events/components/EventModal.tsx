@@ -52,7 +52,7 @@ export function EventModal({ isOpen, onClose, event }: EventModalProps) {
             <div>
               <div className="font-medium text-gray-900 dark:text-white">Time</div>
               <div className="text-gray-600 dark:text-gray-300">
-                {event.start.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })} - {event.end.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}
+                {event.start.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })} - {event.end.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })} {event.start.toLocaleTimeString('en-US', { timeZoneName: 'short' }).split(' ')[2]}
               </div>
             </div>
           </div>
