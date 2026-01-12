@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useStripe, useElements, PaymentElement } from '@stripe/react-stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
-import { getStripe } from '@/lib/stripe';
+import { getStripeClient } from '@/lib/stripe';
 
 interface DonationFormProps {
   onSuccess?: () => void;
@@ -146,7 +146,7 @@ export default function DonationForm(props: DonationFormProps) {
   });
 
   return clientSecret ? (
-    <Elements stripe={getStripe()} options={{ clientSecret }}>
+    <Elements stripe={getStripeClient()} options={{ clientSecret }}>
       <DonationFormInner {...props} />
     </Elements>
   ) : (
