@@ -57,7 +57,7 @@ export default async function EventsPage() {
       {/* Hero Section */}
       <section className="bg-primary-50 dark:bg-gray-800 py-20">
         <div className="container mx-auto px-4">
-          <h1 className="text-4xl md:text-5xl font-bold text-center mb-6">Events Calendar</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-center mb-6 text-gray-900 dark:text-white">Events Calendar</h1>
           <p className="text-xl text-center text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
             Stay connected with our church community through our various events and activities.
           </p>

@@ -1,0 +1,121 @@
+[
+    {
+        "name": "Bowenpally",
+        "address": "Bowenpally, Hyderabad, TG-82",
+        "phone": "+91 99890 99890",
+        "services": [
+            {
+                "day": "Sunday",
+                "type": "In-Person",
+                "serviceType": "Telugu Service",
+                "time": "8:00 AM IST",
+                "location": "Main Sanctuary"
+            },
+            {
+                "day": "Sunday",
+                "type": "In-Person",
+                "serviceType": "English Service",
+                "time": "10:00 AM IST",
+                "location": "Main Sanctuary"
+            }
+        ]
+    },
+    {
+        "name": "Hi-tech City",
+        "address": "1st floor, A*Heights, Cyber Tower Road, Khanamet, Hyd, TG-82.",
+        "phone": "+91 99890 99890",
+        "services": [
+            {
+                "day": "Sunday",
+                "type": "In-Person",
+                "serviceType": "Telugu Service",
+                "time": "8:00 AM IST",
+                "location": "Main Sanctuary"
+            },
+            {
+                "day": "Sunday",
+                "type": "In-Person",
+                "serviceType": "English Service",
+                "time": "10:00 AM IST",
+                "location": "Main Sanctuary"
+            }
+        ]
+    },
+    {
+        "name": "Vikrampuri",
+        "address": "11-B, Vikrampuri Colony, Karkhana, Secunderabad, TG-15",
+        "phone": "+91 99890 99890",
+        "services": [
+            {
+                "day": "Sunday",
+                "type": "In-Person",
+                "serviceType": "Hindi Service",
+                "time": "8:00 AM IST",
+                "location": "Main Sanctuary"
+            },
+            {
+                "day": "Sunday",
+                "type": "In-Person",
+                "serviceType": "English Service",
+                "time": "10:30 AM IST",
+                "location": "Main Sanctuary"
+            }
+        ]
+    },
+    {
+        "name": "Bangalore",
+        "address": "2nd floor, No 8, 80 feet road, Above Dominios, RT Nagar, Bangalore, Karnataka",
+        "phone": "+91 99890 99890",
+        "services": [
+            {
+                "day": "Sunday",
+                "type": "In-Person",
+                "serviceType": "English Service",
+                "time": "10:00 AM IST",
+                "location": "Main Sanctuary"
+            }
+        ]
+    },
+    {
+        "name": "Tumsar",
+        "address": "Tumsar, Maharashtra, India",
+        "phone": "+91 99890 99890",
+        "services": [
+            {
+                "day": "Sunday",
+                "type": "In-Person",
+                "serviceType": "Hindi Service",
+                "time": "9 AM IST",
+                "location": "Tumsar Church"
+            }
+        ]
+    },
+    {
+        "name": "Singapore",
+        "address": "Online Service",
+        "phone": "+65 99890 99890",
+        "services": [
+            {
+                "day": "Sunday",
+                "type": "Online",
+                "time": "9 AM SG",
+                "location": "Zoom",
+                "link": "https://zoom.us/j/123456789"
+            }
+        ]
+    },
+    {
+        "name": "City Harvest International Fellowship",
+        "address": "Online Service",
+        "phone": "+1 973 905 0486",
+        "services": [
+            {
+                "day": "Sunday",
+                "type": "Online",
+                "time": "9 AM EST",
+                "location": "Zoom",
+                "link": "https://zoom.us/j/123456789"
+            }
+        ]
+    }
+]
