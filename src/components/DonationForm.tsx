@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useStripe, useElements, PaymentElement } from '@stripe/stripe-js';
-import { Elements } from '@stripe/stripe-js';
+import { useStripe, useElements, PaymentElement } from '@stripe/react-stripe-js';
+import { Elements } from '@stripe/react-stripe-js';
 import { getStripe } from '@/lib/stripe';
 
 interface DonationFormProps {

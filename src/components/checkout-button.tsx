@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { createCheckoutSession } from '@/services/stripe-service';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { Stripe } from '@stripe/stripe-js';
 
 interface CheckoutButtonProps {
   priceId: string;
@@ -31,18 +32,17 @@ export default function CheckoutButton({
       const { sessionId } = await createCheckoutSession(priceId, customerEmail);
       
       // Redirect to Stripe Checkout
-      const stripe = (await import('@stripe/stripe-js')).loadStripe(
+      const { loadStripe } = await import('@stripe/stripe-js');
+      const stripe: Stripe | null = await loadStripe(
         process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
       );
       
-      const { error } = await (await stripe).redirectToCheckout({
-        sessionId,
-      });
-      
-      if (error) {
-        console.error('Error redirecting to checkout:', error);
-        throw error;
+      if (!stripe) {
+        throw new Error('Failed to load Stripe');
       }
+      
+      // Use the correct method for newer Stripe versions
+      window.location.href = `https://checkout.stripe.com/pay/${sessionId}`;
     } catch (error) {
       console.error('Checkout error:', error);
       // Handle error (e.g., show an error message to the user)

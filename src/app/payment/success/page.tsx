@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { getSession } from '@/services/stripe-service';
 import { useSession } from 'next-auth/react';
 
-export default function PaymentSuccess() {
+function PaymentSuccessContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get('session_id');
   const [paymentStatus, setPaymentStatus] = useState('Processing...');
@@ -62,5 +62,20 @@ export default function PaymentSuccess() {
         </a>
       </div>
     </div>
+  );
+}
+
+export default function PaymentSuccess() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
+        <div className="bg-white p-8 rounded-lg shadow-md max-w-md w-full text-center">
+          <h1 className="text-2xl font-bold text-green-600 mb-4">Loading...</h1>
+          <p>Please wait while we verify your payment.</p>
+        </div>
+      </div>
+    }>
+      <PaymentSuccessContent />
+    </Suspense>
   );
 }
