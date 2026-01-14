@@ -33,7 +33,7 @@ export default async function About() {
         <div className="container mx-auto px-4">
           <h1 className="text-4xl md:text-5xl font-bold text-center mb-6">About Our Church</h1>
           <p className="text-xl text-center text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            City Harvest International Fellowship is a vibrant, multicultural community of believers
+            City Harvest AG Church is a vibrant, multicultural community of believers
             dedicated to sharing God's love and making a positive impact in our city.
           </p>
         </div>

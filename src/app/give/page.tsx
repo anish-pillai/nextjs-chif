@@ -209,7 +209,7 @@ const GivePage = () => {
               <p className="text-gray-600 dark:text-gray-300">
                 Send checks to:
                 <br />
-                City Harvest International Fellowship
+                City Harvest AG Church
                 <br />
                 123 Main Street
                 <br />

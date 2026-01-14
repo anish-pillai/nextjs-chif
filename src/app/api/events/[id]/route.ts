@@ -12,8 +12,8 @@ export const dynamic = 'force-dynamic';
 
 // GET /api/events/[id] - Get event by ID
 export async function GET(request, { params }) {
-  // Extract id directly
-  const { id } = params;
+  // Extract id from params (must await in Next.js 15+)
+  const { id } = await params;
   return handleRequest(request, async () => {
     const event = await prisma.event.findUnique({
       where: { id },
@@ -39,8 +39,8 @@ export async function GET(request, { params }) {
 
 // PUT /api/events/[id] - Update event
 export async function PUT(request, { params }) {
-  // Extract id directly
-  const { id } = params;
+  // Extract id from params (must await in Next.js 15+)
+  const { id } = await params;
   return handleRequest(request, async () => {
     const json = await request.json();
     const data = updateEventSchema.parse(json);
@@ -94,8 +94,8 @@ export async function PUT(request, { params }) {
 
 // DELETE /api/events/[id] - Delete event
 export async function DELETE(request, { params }) {
-  // Extract id directly
-  const { id } = params;
+  // Extract id from params (must await in Next.js 15+)
+  const { id } = await params;
   return handleRequest(request, async () => {
     // Check if event exists
     const existingEvent = await prisma.event.findUnique({

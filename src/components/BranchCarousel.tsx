@@ -51,7 +51,7 @@ export function BranchCarousel({ branches }: BranchCarouselProps) {
           <span className="block text-6xl md:text-7xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-primary-400 to-primary-600 dark:from-primary-300 dark:to-primary-500">
             City Harvest
           </span>
-          <span className="block text-5xl md:text-6xl font-bold">International Fellowship</span>
+          <span className="block text-5xl md:text-6xl font-bold">AG Church</span>
         </h1>
         
         {/* Branch Name */}

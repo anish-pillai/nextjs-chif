@@ -13,7 +13,7 @@ import Image from 'next/image';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'City Harvest International Fellowship',
+  title: 'City Harvest AG Church',
   description: 'A welcoming Christian community in the heart of the city.',
   icons: {
     icon: '/images/logo.png',
@@ -46,7 +46,7 @@ export default function RootLayout({
             height={40}
             className="rounded-full"
           />
-                    <span className="text-xl font-bold">CHIF</span>
+                    <span className="text-xl font-bold">CHAG</span>
                   </Link>
                   <Navigation />
                 </div>

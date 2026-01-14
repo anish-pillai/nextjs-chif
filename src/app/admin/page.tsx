@@ -4,6 +4,8 @@ import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
+import { ConfirmModal } from '@/components/ConfirmModal';
+import { LeadershipModal } from '@/components/LeadershipModal';
 
 interface User {
   id: string;
@@ -75,6 +77,21 @@ function AdminDashboardContent() {
     description: '',
     email: '',
     order: 0
+  });
+  const [leadershipModalOpen, setLeadershipModalOpen] = useState(false);
+  const [editingLeadershipMember, setEditingLeadershipMember] = useState<LeadershipTeam | null>(null);
+  const [confirmModal, setConfirmModal] = useState<{
+    isOpen: boolean;
+    type: 'event' | 'sermon' | 'leadership';
+    id: string;
+    title: string;
+    message: string;
+  }>({
+    isOpen: false,
+    type: 'event',
+    id: '',
+    title: '',
+    message: ''
   });
 
   useEffect(() => {
@@ -197,9 +214,17 @@ function AdminDashboardContent() {
     }
   };
 
-  const deleteEvent = async (eventId: string) => {
-    if (!confirm('Are you sure you want to delete this event?')) return;
-    
+  const deleteEvent = (eventId: string) => {
+    setConfirmModal({
+      isOpen: true,
+      type: 'event',
+      id: eventId,
+      title: 'Delete Event',
+      message: 'Are you sure you want to delete this event? This action cannot be undone.'
+    });
+  };
+
+  const confirmDeleteEvent = async (eventId: string) => {
     try {
       const response = await fetch(`/api/events/${eventId}`, {
         method: 'DELETE',
@@ -216,9 +241,17 @@ function AdminDashboardContent() {
     }
   };
 
-  const deleteSermon = async (sermonId: string) => {
-    if (!confirm('Are you sure you want to delete this sermon?')) return;
-    
+  const deleteSermon = (sermonId: string) => {
+    setConfirmModal({
+      isOpen: true,
+      type: 'sermon',
+      id: sermonId,
+      title: 'Delete Sermon',
+      message: 'Are you sure you want to delete this sermon? This action cannot be undone.'
+    });
+  };
+
+  const confirmDeleteSermon = async (sermonId: string) => {
     try {
       const response = await fetch(`/api/sermons/${sermonId}`, {
         method: 'DELETE',
@@ -235,9 +268,17 @@ function AdminDashboardContent() {
     }
   };
   
-  const deleteLeadershipMember = async (memberId: string) => {
-    if (!confirm('Are you sure you want to delete this leadership team member?')) return;
-    
+  const deleteLeadershipMember = (memberId: string) => {
+    setConfirmModal({
+      isOpen: true,
+      type: 'leadership',
+      id: memberId,
+      title: 'Delete Leadership Team Member',
+      message: 'Are you sure you want to delete this leadership team member? This action cannot be undone.'
+    });
+  };
+
+  const confirmDeleteLeadershipMember = async (memberId: string) => {
     try {
       const response = await fetch(`/api/leadership/${memberId}`, {
         method: 'DELETE',
@@ -254,45 +295,60 @@ function AdminDashboardContent() {
     }
   };
   
-  const handleLeadershipInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setNewLeadershipMember(prev => ({
-      ...prev,
-      [name]: value
-    }));
+  const openLeadershipModal = (member?: LeadershipTeam) => {
+    setEditingLeadershipMember(member || null);
+    setLeadershipModalOpen(true);
   };
-  
-  const addLeadershipMember = async (e: React.FormEvent) => {
-    e.preventDefault();
+
+  const closeLeadershipModal = () => {
+    setLeadershipModalOpen(false);
+    setEditingLeadershipMember(null);
+  };
+
+  const handleLeadershipSubmit = async (memberData: any) => {
     try {
-      const response = await fetch('/api/leadership', {
-        method: 'POST',
+      const url = editingLeadershipMember 
+        ? `/api/leadership/${editingLeadershipMember.id}`
+        : '/api/leadership';
+      
+      const method = editingLeadershipMember ? 'PUT' : 'POST';
+      
+      const response = await fetch(url, {
+        method,
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          ...newLeadershipMember,
-          order: parseInt(newLeadershipMember.order.toString())
+          ...memberData,
+          updatedAt: Math.floor(Date.now() / 1000)
         }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to add leadership team member');
+        throw new Error(`Failed to ${editingLeadershipMember ? 'update' : 'add'} leadership team member`);
       }
 
-      // Reset form and refresh list
-      setNewLeadershipMember({
-        name: '',
-        role: '',
-        image: '',
-        description: '',
-        email: '',
-        order: 0
-      });
+      // Refresh leadership team list and close modal
       fetchLeadershipTeam();
+      closeLeadershipModal();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     }
+  };
+
+  const handleConfirmDelete = () => {
+    switch (confirmModal.type) {
+      case 'event':
+        confirmDeleteEvent(confirmModal.id);
+        break;
+      case 'sermon':
+        confirmDeleteSermon(confirmModal.id);
+        break;
+      case 'leadership':
+        confirmDeleteLeadershipMember(confirmModal.id);
+        break;
+    }
+    setConfirmModal(prev => ({ ...prev, isOpen: false }));
   };
 
   if (status === 'loading' || loading) {
@@ -501,84 +557,15 @@ function AdminDashboardContent() {
         
         {activeTab === 'leadership' && (
           <div className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Leadership Team Management</h2>
-            
-            <form onSubmit={addLeadershipMember} className="mb-6 bg-gray-50 dark:bg-gray-800 p-4 rounded-md">
-              <h3 className="text-lg font-medium mb-4">Add New Leadership Team Member</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Name</label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={newLeadershipMember.name}
-                    onChange={handleLeadershipInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Role</label>
-                  <input
-                    type="text"
-                    name="role"
-                    value={newLeadershipMember.role}
-                    onChange={handleLeadershipInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Image URL</label>
-                  <input
-                    type="text"
-                    name="image"
-                    value={newLeadershipMember.image}
-                    onChange={handleLeadershipInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email (Optional)</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={newLeadershipMember.email}
-                    onChange={handleLeadershipInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Display Order</label>
-                  <input
-                    type="number"
-                    name="order"
-                    value={newLeadershipMember.order}
-                    onChange={handleLeadershipInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                    min="0"
-                    required
-                  />
-                </div>
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description (Optional)</label>
-                <textarea
-                  name="description"
-                  value={newLeadershipMember.description}
-                  onChange={handleLeadershipInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                  rows={3}
-                ></textarea>
-              </div>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold">Leadership Team Management</h2>
               <button
-                type="submit"
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                onClick={() => openLeadershipModal()}
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
               >
-                Add Team Member
+                Add New Team Member
               </button>
-            </form>
+            </div>
             
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
@@ -597,12 +584,12 @@ function AdminDashboardContent() {
                       <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">{member.role}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">{member.order}</td>
                       <td className="px-6 py-4 whitespace-nowrap space-x-2">
-                        <Link 
-                          href={`/admin/leadership/edit/${member.id}`}
+                        <button 
+                          onClick={() => openLeadershipModal(member)}
                           className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
                         >
                           Edit
-                        </Link>
+                        </button>
                         <button 
                           onClick={() => deleteLeadershipMember(member.id)}
                           className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 ml-3"
@@ -622,6 +609,23 @@ function AdminDashboardContent() {
           </div>
         )}
       </div>
+
+      {/* Leadership Modal */}
+      <LeadershipModal
+        isOpen={leadershipModalOpen}
+        onClose={closeLeadershipModal}
+        onSubmit={handleLeadershipSubmit}
+        member={editingLeadershipMember}
+      />
+
+      {/* Confirmation Modal */}
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        onClose={() => setConfirmModal(prev => ({ ...prev, isOpen: false }))}
+        onConfirm={handleConfirmDelete}
+        title={confirmModal.title}
+        message={confirmModal.message}
+      />
     </div>
   );
 }

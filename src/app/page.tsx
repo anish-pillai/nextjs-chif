@@ -1,5 +1,3 @@
-import { Calendar, MapPin, Clock } from 'lucide-react';
-import { DateDisplay, TimeDisplay } from '@/components/TimeDisplay';
 import { HeroBackground } from '@/components/HeroBackground';
 import { EventsCarousel } from '@/components/EventsCarousel';
 import { ChurchBranches } from '@/components/ChurchBranches';
@@ -39,7 +37,7 @@ export default async function Home() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative h-[50vh] flex items-center justify-center">
+      <section className="relative min-h-[calc(50vh-4rem)] md:min-h-[calc(35vh-1rem)] flex items-start justify-center pt-16">
         <HeroBackground />
         
         {/* Dark overlay for text readability */}

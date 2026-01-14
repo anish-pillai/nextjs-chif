@@ -18,8 +18,8 @@ export async function GET(
       );
     }
 
-    // Extract id directly
-    const { id } = params;
+    // Extract id from params (must await in Next.js 15+)
+    const { id } = await params;
 
     // Fetch leadership team member by ID
     const leadershipMember = await prisma.leadershipTeam.findUnique({
@@ -65,8 +65,8 @@ export async function PUT(
       );
     }
 
-    // Extract id directly
-    const { id } = params;
+    // Extract id from params (must await in Next.js 15+)
+    const { id } = await params;
     const body = await request.json();
 
     // Validate required fields
@@ -135,8 +135,8 @@ export async function DELETE(
       );
     }
 
-    // Extract id directly
-    const { id } = params;
+    // Extract id from params (must await in Next.js 15+)
+    const { id } = await params;
 
     // Check if leadership team member exists
     const existingMember = await prisma.leadershipTeam.findUnique({
