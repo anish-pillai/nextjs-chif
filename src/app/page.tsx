@@ -3,7 +3,6 @@ import { EventsCarousel } from '@/components/EventsCarousel';
 import { ChurchBranches } from '@/components/ChurchBranches';
 import { prisma } from '@/lib/db';
 import { getCurrentTimestamp } from '@/lib/utils';
-import churchBranches from './churchBranches.json';
 
 async function getFutureEvents() {
   try {
@@ -32,8 +31,28 @@ async function getFutureEvents() {
   }
 }
 
+async function getChurchBranches() {
+  try {
+    const branches = await prisma.churchBranch.findMany({
+      where: { isActive: true },
+      orderBy: { order: 'asc' },
+      include: {
+        services: {
+          orderBy: { day: 'asc' }
+        }
+      }
+    });
+
+    return branches;
+  } catch (error) {
+    console.error('Error fetching church branches:', error);
+    return [];
+  }
+}
+
 export default async function Home() {
   const futureEvents = await getFutureEvents();
+  const churchBranches = await getChurchBranches();
   return (
     <div>
       {/* Hero Section */}

@@ -63,11 +63,12 @@ function AdminDashboardContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const tabParam = searchParams.get('tab');
-  const [activeTab, setActiveTab] = useState(tabParam && ['users', 'events', 'sermons', 'leadership'].includes(tabParam) ? tabParam : 'users');
+  const [activeTab, setActiveTab] = useState(tabParam && ['users', 'events', 'sermons', 'leadership', 'branches'].includes(tabParam) ? tabParam : 'users');
   const [users, setUsers] = useState<User[]>([]);
   const [events, setEvents] = useState<Event[]>([]);
   const [sermons, setSermons] = useState<Sermon[]>([]);
   const [leadershipTeam, setLeadershipTeam] = useState<LeadershipTeam[]>([]);
+  const [branches, setBranches] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [newLeadershipMember, setNewLeadershipMember] = useState({
@@ -82,7 +83,7 @@ function AdminDashboardContent() {
   const [editingLeadershipMember, setEditingLeadershipMember] = useState<LeadershipTeam | null>(null);
   const [confirmModal, setConfirmModal] = useState<{
     isOpen: boolean;
-    type: 'event' | 'sermon' | 'leadership';
+    type: 'event' | 'sermon' | 'leadership' | 'branch';
     id: string;
     title: string;
     message: string;
@@ -112,6 +113,7 @@ function AdminDashboardContent() {
       if (activeTab === 'events') fetchEvents();
       if (activeTab === 'sermons') fetchSermons();
       if (activeTab === 'leadership') fetchLeadershipTeam();
+      if (activeTab === 'branches') fetchBranches();
     }
   }, [status, session, router, activeTab]);
 
@@ -170,7 +172,23 @@ function AdminDashboardContent() {
       setLoading(false);
     }
   };
-  
+
+  const fetchBranches = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/branches/admin');
+      if (!response.ok) {
+        throw new Error('Failed to fetch branches');
+      }
+      const data = await response.json();
+      setBranches(data.data || []);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const fetchLeadershipTeam = async () => {
     try {
       setLoading(true);
@@ -268,6 +286,33 @@ function AdminDashboardContent() {
     }
   };
   
+  const deleteBranch = (branchId: string) => {
+    setConfirmModal({
+      isOpen: true,
+      type: 'branch',
+      id: branchId,
+      title: 'Delete Branch',
+      message: 'Are you sure you want to delete this branch? This action cannot be undone.'
+    });
+  };
+
+  const confirmDeleteBranch = async (branchId: string) => {
+    try {
+      const response = await fetch(`/api/branches/${branchId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete branch');
+      }
+
+      // Refresh branches list
+      fetchBranches();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    }
+  };
+
   const deleteLeadershipMember = (memberId: string) => {
     setConfirmModal({
       isOpen: true,
@@ -336,19 +381,82 @@ function AdminDashboardContent() {
     }
   };
 
-  const handleConfirmDelete = () => {
-    switch (confirmModal.type) {
-      case 'event':
-        confirmDeleteEvent(confirmModal.id);
-        break;
-      case 'sermon':
-        confirmDeleteSermon(confirmModal.id);
-        break;
-      case 'leadership':
-        confirmDeleteLeadershipMember(confirmModal.id);
-        break;
+  const toggleBranchActive = async (branchId: string, currentStatus: boolean) => {
+    try {
+      const response = await fetch(`/api/branches/${branchId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          isActive: !currentStatus,
+          updatedAt: Math.floor(Date.now() / 1000)
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update branch status');
+      }
+
+      // Refresh branches list
+      fetchBranches();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
     }
-    setConfirmModal(prev => ({ ...prev, isOpen: false }));
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      switch (confirmModal.type) {
+        case 'event':
+          const eventResponse = await fetch(`/api/events/${confirmModal.id}`, {
+            method: 'DELETE',
+          });
+
+          if (!eventResponse.ok) {
+            throw new Error('Failed to delete event');
+          }
+
+          await fetchEvents();
+          break;
+        case 'sermon':
+          const sermonResponse = await fetch(`/api/sermons/${confirmModal.id}`, {
+            method: 'DELETE',
+          });
+
+          if (!sermonResponse.ok) {
+            throw new Error('Failed to delete sermon');
+          }
+
+          await fetchSermons();
+          break;
+        case 'leadership':
+          const leadershipResponse = await fetch(`/api/leadership/${confirmModal.id}`, {
+            method: 'DELETE',
+          });
+
+          if (!leadershipResponse.ok) {
+            throw new Error('Failed to delete leadership team member');
+          }
+
+          await fetchLeadershipTeam();
+          break;
+        case 'branch':
+          const branchResponse = await fetch(`/api/branches/${confirmModal.id}`, {
+            method: 'DELETE',
+          });
+
+          if (!branchResponse.ok) {
+            throw new Error('Failed to delete branch');
+          }
+
+          await fetchBranches();
+          break;
+      }
+      setConfirmModal(prev => ({ ...prev, isOpen: false }));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    }
   };
 
   if (status === 'loading' || loading) {
@@ -402,6 +510,15 @@ function AdminDashboardContent() {
           className={`py-2 px-4 font-medium ${activeTab === 'leadership' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-blue-500'}`}
         >
           Leadership Team
+        </button>
+        <button
+          onClick={() => {
+            setActiveTab('branches');
+            router.push('/admin?tab=branches');
+          }}
+          className={`py-2 px-4 font-medium ${activeTab === 'branches' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-blue-500'}`}
+        >
+          Branches
         </button>
       </div>
       
@@ -555,15 +672,91 @@ function AdminDashboardContent() {
           </div>
         )}
         
+        {activeTab === 'branches' && (
+          <div className="p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold">Church Branches Management</h2>
+              <Link 
+                href="/admin/branches/new"
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+              >
+                Add New Branch
+              </Link>
+            </div>
+            
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50 dark:bg-gray-700">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Name</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Country</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Address</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Phone</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                  {branches && branches.length > 0 ? branches.map((branch) => (
+                    <tr key={branch.id}>
+                      <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">{branch.name}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">{branch.country || '-'}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">{branch.address}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">{branch.phone}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+                          branch.isActive 
+                            ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' 
+                            : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+                        }`}>
+                          {branch.isActive ? 'Active' : 'Disabled'}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap space-x-2">
+                        <Link 
+                          href={`/admin/branches/edit/${branch.id}`}
+                          className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                        >
+                          Edit
+                        </Link>
+                        <button 
+                          onClick={() => toggleBranchActive(branch.id, branch.isActive)}
+                          className={`px-3 py-1 text-white text-sm rounded transition-colors ml-3 ${
+                            branch.isActive 
+                              ? 'bg-orange-600 hover:bg-orange-700' 
+                              : 'bg-green-600 hover:bg-green-700'
+                          }`}
+                        >
+                          {branch.isActive ? 'Deactivate' : 'Activate'}
+                        </button>
+                        <button 
+                          onClick={() => deleteBranch(branch.id)}
+                          className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 ml-3"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  )) : (
+                    <tr>
+                      <td colSpan={6} className="px-6 py-4 text-center text-gray-500 dark:text-gray-400">No branches found</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+        
         {activeTab === 'leadership' && (
           <div className="p-6">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-semibold">Leadership Team Management</h2>
-              <button
+              <button 
                 onClick={() => openLeadershipModal()}
                 className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
               >
-                Add New Team Member
+                Add New Member
               </button>
             </div>
             
@@ -617,7 +810,7 @@ function AdminDashboardContent() {
         onSubmit={handleLeadershipSubmit}
         member={editingLeadershipMember}
       />
-
+      
       {/* Confirmation Modal */}
       <ConfirmModal
         isOpen={confirmModal.isOpen}
@@ -625,6 +818,8 @@ function AdminDashboardContent() {
         onConfirm={handleConfirmDelete}
         title={confirmModal.title}
         message={confirmModal.message}
+        confirmText="Delete"
+        cancelText="Cancel"
       />
     </div>
   );

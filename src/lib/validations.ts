@@ -25,7 +25,7 @@ export const createEventSchema = z.object({
   endDateTime: z.string().datetime(),
   location: z.string().min(3, 'Location must be at least 3 characters'),
   type: z.nativeEnum(EventType).optional().default('OTHER'),
-  organizerId: z.string().uuid().or(z.string().cuid()),
+  organizerId: z.string().uuid().or(z.string().cuid()).optional(),
   createdAt: z.number().int().min(0).optional(),
   updatedAt: z.number().int().min(0).optional(),
 }).refine((data) => new Date(data.endDateTime) > new Date(data.startDateTime), {
@@ -43,6 +43,15 @@ export const updateEventSchema = z.object({
   organizerId: z.string().uuid().or(z.string().cuid()).optional(),
 }).refine((data) => Object.keys(data).length > 0, {
   message: 'At least one field must be provided for update'
+}).refine((data) => {
+  // Only validate time relationship if both start and end times are provided
+  if (data.startDateTime && data.endDateTime) {
+    return new Date(data.endDateTime) > new Date(data.startDateTime);
+  }
+  return true;
+}, {
+  message: 'End time must be after start time',
+  path: ['endDateTime'],
 });
 
 // Sermon validation schemas
@@ -64,7 +73,7 @@ export const createSermonSchema = z.object({
   ]),
   videoUrl: z.string().url('Invalid video URL').optional().nullable(),
   audioUrl: z.string().url('Invalid audio URL').optional().nullable(),
-  preacherId: z.string().uuid().or(z.string().cuid()),
+  preacherId: z.string().min(1, 'Preacher ID is required'),
   scripture: z.string().min(3, 'Scripture reference must be at least 3 characters'),
   series: z.string().optional().nullable(),
 });
@@ -87,7 +96,7 @@ export const updateSermonSchema = z.object({
   ]).optional(),
   videoUrl: z.string().url('Invalid video URL').optional().nullable(),
   audioUrl: z.string().url('Invalid audio URL').optional().nullable(),
-  preacherId: z.string().uuid().or(z.string().cuid()).optional(),
+  preacherId: z.string().min(1, 'Preacher ID is required').optional(),
   scripture: z.string().min(3, 'Scripture reference must be at least 3 characters').optional(),
   series: z.string().optional().nullable(),
 }).refine((data) => Object.keys(data).length > 0, {

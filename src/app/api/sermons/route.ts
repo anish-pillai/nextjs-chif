@@ -41,8 +41,8 @@ export async function GET(req) {
             select: {
               id: true,
               name: true,
-              email: true,
-              role: true
+              role: true,
+              email: true
             }
           }
         },
@@ -70,6 +70,10 @@ export async function GET(req) {
 export async function POST(req) {
   return handleRequest(req, async () => {
     const json = await req.json();
+    
+    // Log the incoming data for debugging
+    console.log('API - Incoming data:', json);
+    
     const validatedData = createSermonSchema.parse(json);
     
     // Create sermon data with proper structure for Prisma
@@ -101,12 +105,15 @@ export async function POST(req) {
     
     // Check if preacher exists when a preacher is specified
     if (validatedData.preacherId) {
-      const preacherExists = await prisma.user.findUnique({
+      console.log('API - Checking for preacher with ID:', validatedData.preacherId);
+      const preacherExists = await prisma.leadershipTeam.findUnique({
         where: { id: validatedData.preacherId }
       });
     
+      console.log('API - Preacher found:', !!preacherExists);
+      
       if (!preacherExists) {
-        return errorResponse('Preacher not found');
+        return errorResponse(`Preacher with ID ${validatedData.preacherId} not found`);
       }
     }
     
@@ -117,8 +124,8 @@ export async function POST(req) {
           select: {
             id: true,
             name: true,
-            email: true,
-            role: true
+            role: true,
+            email: true
           }
         }
       }

@@ -11,16 +11,22 @@ interface Service {
 
 interface Branch {
   name: string;
+  country?: string;
   address: string;
   phone: string;
+  isActive: boolean;
   services: Service[];
 }
 
 interface ChurchBranchesProps {
   branches: Branch[];
+  onEdit?: (branch: Branch) => void;
+  onToggleActive?: (branch: Branch) => void;
+  onDelete?: (branch: Branch) => void;
+  showActions?: boolean;
 }
 
-export function ChurchBranches({ branches }: ChurchBranchesProps) {
+export function ChurchBranches({ branches, onEdit, onToggleActive, onDelete, showActions = false }: ChurchBranchesProps) {
   return (
     <section className="py-16 bg-gray-50 dark:bg-gray-800">
       <div className="container mx-auto px-4">
@@ -29,10 +35,36 @@ export function ChurchBranches({ branches }: ChurchBranchesProps) {
           {branches.map((branch, index) => (
             <div key={index} className="bg-white dark:bg-gray-900 rounded-lg shadow-md overflow-hidden">
               <div className="p-6">
-                <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">{branch.name}</h3>
+                <div className="flex justify-between items-start mb-4">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white">{branch.name}</h3>
+                  <div className="flex space-x-2">
+                    {showActions && onEdit && (
+                      <button
+                        onClick={() => onEdit(branch)}
+                        className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium"
+                      >
+                        Edit
+                      </button>
+                    )}
+                    {showActions && onDelete && (
+                      <button
+                        onClick={() => onDelete(branch)}
+                        className="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 text-sm font-medium"
+                      >
+                        Delete
+                      </button>
+                    )}
+                  </div>
+                </div>
                 
                 {/* Branch Info */}
                 <div className="space-y-3 mb-6">
+                  {branch.country && (
+                    <div className="flex items-start space-x-3">
+                      <Globe className="h-5 w-5 text-primary-600 dark:text-primary-400 mt-0.5 flex-shrink-0" />
+                      <span className="text-gray-600 dark:text-gray-300 text-sm">{branch.country}</span>
+                    </div>
+                  )}
                   <div className="flex items-start space-x-3">
                     <MapPin className="h-5 w-5 text-primary-600 dark:text-primary-400 mt-0.5 flex-shrink-0" />
                     <span className="text-gray-600 dark:text-gray-300 text-sm">{branch.address}</span>
@@ -76,6 +108,34 @@ export function ChurchBranches({ branches }: ChurchBranchesProps) {
                     </div>
                   ))}
                 </div>
+                
+                {/* Action Buttons */}
+                {showActions && (
+                  <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                    <button
+                      onClick={() => onEdit?.(branch)}
+                      className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => onToggleActive?.(branch)}
+                      className={`px-3 py-1 text-white text-sm rounded transition-colors ${
+                        branch.isActive 
+                          ? 'bg-orange-600 hover:bg-orange-700' 
+                          : 'bg-green-600 hover:bg-green-700'
+                      }`}
+                    >
+                      {branch.isActive ? 'Deactivate' : 'Activate'}
+                    </button>
+                    <button
+                      onClick={() => onDelete?.(branch)}
+                      className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition-colors"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           ))}

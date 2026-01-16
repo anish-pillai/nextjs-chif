@@ -1,15 +1,26 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
+
+interface LeadershipMember {
+  id: string;
+  name: string;
+  role: string;
+  image?: string;
+  description?: string;
+  email?: string;
+}
 
 export default function NewSermon() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [leadershipTeam, setLeadershipTeam] = useState<LeadershipMember[]>([]);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -20,6 +31,28 @@ export default function NewSermon() {
     scripture: '',
     series: '',
   });
+
+  // Fetch leadership team on component mount
+  useEffect(() => {
+    const fetchLeadershipTeam = async () => {
+      try {
+        const response = await fetch('/api/leadership');
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Leadership team members:', data.data);
+          setLeadershipTeam(data.data || []);
+        } else {
+          console.error('Failed to fetch leadership team');
+        }
+      } catch (err) {
+        console.error('Error fetching leadership team:', err);
+      }
+    };
+
+    if (status === 'authenticated') {
+      fetchLeadershipTeam();
+    }
+  }, [status]);
 
   // Redirect if not authenticated or not admin/pastor
   if (status === 'unauthenticated') {
@@ -33,23 +66,74 @@ export default function NewSermon() {
     return null;
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+    
+    // Clear error when user starts typing in description
+    if (name === 'description' && value.length >= 10) {
+      setError(null);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Prevent double submission
+    if (isSubmitting) {
+      console.log('Already submitting, preventing double submission');
+      return;
+    }
+    
+    setIsSubmitting(true);
     setLoading(true);
     setError(null);
 
+    // Client-side validation
+    if (!formData.title.trim()) {
+      setError('Sermon title is required');
+      setLoading(false);
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (!formData.description.trim()) {
+      setError('Sermon description is required');
+      setLoading(false);
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (formData.description.trim().length < 10) {
+      setError('Sermon description must be at least 10 characters');
+      setLoading(false);
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (!formData.scripture.trim()) {
+      setError('Scripture reference is required');
+      setLoading(false);
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (!formData.preacherId.trim()) {
+      setError('Please select a preacher from the leadership team');
+      setLoading(false);
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (!formData.date) {
+      setError('Sermon date is required');
+      setLoading(false);
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
       // Ensure we have a valid date string before converting
-      if (!formData.date) {
-        throw new Error('Sermon date is required');
-      }
-
-      // Create a date object at noon to avoid timezone issues
       const dateObj = new Date(formData.date);
       dateObj.setHours(12, 0, 0, 0);
       
@@ -69,13 +153,17 @@ export default function NewSermon() {
       const sermonData = {
         title: formData.title,
         description: formData.description,
-        preacherId: session?.user.id,
+        preacherId: formData.preacherId, // Use selected preacher from leadership team
         date: unixTimestamp, // Store as Unix timestamp in seconds
         videoUrl: formData.videoUrl || null,
         audioUrl: formData.audioUrl || null,
         scripture: formData.scripture,
         series: formData.series || null
       };
+
+      console.log('Submitting sermon data:', sermonData);
+      console.log('Description length:', formData.description.length);
+      console.log('Description value:', JSON.stringify(formData.description));
 
       const response = await fetch('/api/sermons', {
         method: 'POST',
@@ -97,6 +185,7 @@ export default function NewSermon() {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
       setLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -141,15 +230,17 @@ export default function NewSermon() {
 
             <div className="col-span-2">
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Description *
+                Description * (minimum 10 characters)
               </label>
               <textarea
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
                 required
+                minLength={10}
                 rows={4}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                placeholder="Enter a detailed description of the sermon (at least 10 characters)..."
               />
             </div>
 
@@ -166,6 +257,31 @@ export default function NewSermon() {
                 placeholder="e.g., John 3:16"
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
               />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Preacher *
+              </label>
+              <select
+                name="preacherId"
+                value={formData.preacherId}
+                onChange={handleChange}
+                required
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+              >
+                <option value="">Select a preacher...</option>
+                {leadershipTeam.map((member) => (
+                  <option key={member.id} value={member.id}>
+                    {member.name} - {member.role}
+                  </option>
+                ))}
+              </select>
+              {leadershipTeam.length === 0 && (
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                  No leadership team members available. Please add team members first.
+                </p>
+              )}
             </div>
 
             <div>
@@ -232,10 +348,10 @@ export default function NewSermon() {
           <div className="mt-6">
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || isSubmitting}
               className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 transition-colors disabled:bg-blue-300 dark:disabled:bg-blue-900"
             >
-              {loading ? 'Creating...' : 'Create Sermon'}
+              {loading || isSubmitting ? 'Creating...' : 'Create Sermon'}
             </button>
           </div>
         </form>

@@ -108,19 +108,14 @@ export default function EditEventContent({ id }: { id: string }) {
       // Format dates and times
       const startDateTime = new Date(`${formData.startDate}T${formData.startTime}`);
       const endDateTime = new Date(`${formData.endDate}T${formData.endTime}`);
-      
-      // Convert to Unix timestamps (seconds)
-      const startTime = Math.floor(startDateTime.getTime() / 1000);
-      const endTime = Math.floor(endDateTime.getTime() / 1000);
 
       const eventData = {
         title: formData.title,
         description: formData.description,
         location: formData.location,
         type: formData.type,
-        startTime: startTime,
-        endTime: endTime,
-        imageUrl: formData.imageUrl || null,
+        startDateTime: startDateTime.toISOString(),
+        endDateTime: endDateTime.toISOString(),
       };
 
       const response = await fetch(`/api/events/${id}`, {
@@ -133,7 +128,20 @@ export default function EditEventContent({ id }: { id: string }) {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to update event');
+        console.error('Server error response:', errorData);
+        
+        // Handle validation errors specifically
+        if (errorData.error && errorData.error.includes('Validation error')) {
+          try {
+            const validationError = JSON.parse(errorData.error.replace('Validation error: ', ''));
+            const errorMessage = Object.values(validationError).join(', ');
+            throw new Error(`Validation failed: ${errorMessage}`);
+          } catch (parseError) {
+            throw new Error(errorData.error || 'Failed to update event');
+          }
+        }
+        
+        throw new Error(errorData.error || errorData.message || 'Failed to update event');
       }
 
       // Redirect to admin dashboard on success

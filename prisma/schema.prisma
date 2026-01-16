@@ -57,7 +57,6 @@ model User {
   createdAt     Int       @default(dbgenerated("extract(epoch from now())::integer"))
   updatedAt     Int       @default(dbgenerated("extract(epoch from now())::integer"))
   events        Event[]   @relation("EventOrganizer")
-  sermons       Sermon[]
   accounts      Account[]
   sessions      Session[]
 }
@@ -68,12 +67,12 @@ model Event {
   description String
   location    String
   type        EventType @default(OTHER)
-  organizerId String
+  organizerId String?
   startTime   Int
   endTime     Int
   createdAt   Int
   updatedAt   Int
-  organizer   User      @relation("EventOrganizer", fields: [organizerId], references: [id])
+  organizer   User?     @relation("EventOrganizer", fields: [organizerId], references: [id])
 
   @@index([organizerId])
 }
@@ -90,7 +89,7 @@ model Sermon {
   date        Int
   createdAt   Int
   updatedAt   Int
-  preacher    User    @relation(fields: [preacherId], references: [id])
+  preacher    leadershipTeam @relation(fields: [preacherId], references: [id])
 
   @@index([preacherId])
 }
@@ -105,8 +104,42 @@ model leadershipTeam {
   order       Int     @default(0)
   createdAt   Int
   updatedAt   Int
+  sermons     Sermon[]
 
   @@index([order])
+}
+
+model ChurchBranch {
+  id          String   @id @default(cuid())
+  name        String
+  address     String
+  country     String?
+  phone       String
+  isActive    Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   Int      @default(dbgenerated("extract(epoch from now())::integer"))
+  updatedAt   Int      @default(dbgenerated("extract(epoch from now())::integer"))
+  services    Service[]
+
+  @@index([order])
+  @@index([isActive])
+  @@index([country])
+}
+
+model Service {
+  id           String       @id @default(cuid())
+  day          String
+  type         String       // "In-Person" | "Online"
+  serviceType  String?      // "Telugu Service" | "English Service" | "Hindi Service"
+  time         String
+  location     String
+  link         String?      // For online services
+  branchId     String
+  branch       ChurchBranch @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  createdAt    Int          @default(dbgenerated("extract(epoch from now())::integer"))
+  updatedAt    Int          @default(dbgenerated("extract(epoch from now())::integer"))
+
+  @@index([branchId])
 }
 
 enum Role {

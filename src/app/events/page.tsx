@@ -133,7 +133,7 @@ export default async function EventsPage() {
                     {event.location}
                   </div>
                   <div className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                    Organized by: {event.organizer.name}
+                    Organized by: {event.organizer ? event.organizer.name : 'No organizer assigned'}
                   </div>
                 </div>
               ))

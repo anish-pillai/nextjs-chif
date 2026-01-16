@@ -1,0 +1,122 @@
+[
+    {
+        "id": "cmkeu7yp00001rh0dg4adeypn",
+        "day": "Sunday",
+        "type": "In-Person",
+        "serviceType": "Telugu Service",
+        "time": "8:00 AM IST",
+        "location": "Main Sanctuary",
+        "link": null,
+        "branchId": "cmkeu7yp00000rh0dni2hjz09",
+        "createdAt": 1768444543,
+        "updatedAt": 1768444543
+    },
+    {
+        "id": "cmkeu7yp00002rh0d9hckbb0a",
+        "day": "Sunday",
+        "type": "In-Person",
+        "serviceType": "English Service",
+        "time": "10:00 AM IST",
+        "location": "Main Sanctuary",
+        "link": null,
+        "branchId": "cmkeu7yp00000rh0dni2hjz09",
+        "createdAt": 1768444543,
+        "updatedAt": 1768444543
+    },
+    {
+        "id": "cmkeu7yxu0004rh0dmoc01vc8",
+        "day": "Sunday",
+        "type": "In-Person",
+        "serviceType": "Telugu Service",
+        "time": "8:00 AM IST",
+        "location": "Main Sanctuary",
+        "link": null,
+        "branchId": "cmkeu7yxu0003rh0dpu9dx3on",
+        "createdAt": 1768444544,
+        "updatedAt": 1768444544
+    },
+    {
+        "id": "cmkeu7yxu0005rh0dvrolonug",
+        "day": "Sunday",
+        "type": "In-Person",
+        "serviceType": "English Service",
+        "time": "10:00 AM IST",
+        "location": "Main Sanctuary",
+        "link": null,
+        "branchId": "cmkeu7yxu0003rh0dpu9dx3on",
+        "createdAt": 1768444544,
+        "updatedAt": 1768444544
+    },
+    {
+        "id": "cmkeu7z340007rh0dlv9f1o7r",
+        "day": "Sunday",
+        "type": "In-Person",
+        "serviceType": "Hindi Service",
+        "time": "8:00 AM IST",
+        "location": "Main Sanctuary",
+        "link": null,
+        "branchId": "cmkeu7z340006rh0dbz36yegu",
+        "createdAt": 1768444544,
+        "updatedAt": 1768444544
+    },
+    {
+        "id": "cmkeu7z340008rh0dhuf0e1mc",
+        "day": "Sunday",
+        "type": "In-Person",
+        "serviceType": "English Service",
+        "time": "10:30 AM IST",
+        "location": "Main Sanctuary",
+        "link": null,
+        "branchId": "cmkeu7z340006rh0dbz36yegu",
+        "createdAt": 1768444544,
+        "updatedAt": 1768444544
+    },
+    {
+        "id": "cmkeu7z8m000arh0d6lx19kwd",
+        "day": "Sunday",
+        "type": "In-Person",
+        "serviceType": "English Service",
+        "time": "10:00 AM IST",
+        "location": "Main Sanctuary",
+        "link": null,
+        "branchId": "cmkeu7z8m0009rh0dh8ivpsph",
+        "createdAt": 1768444544,
+        "updatedAt": 1768444544
+    },
+    {
+        "id": "cmkeu7zev000crh0dks6gtn46",
+        "day": "Sunday",
+        "type": "In-Person",
+        "serviceType": "Hindi Service",
+        "time": "9 AM IST",
+        "location": "Tumsar Church",
+        "link": null,
+        "branchId": "cmkeu7zev000brh0dmup8wmlt",
+        "createdAt": 1768444544,
+        "updatedAt": 1768444544
+    },
+    {
+        "id": "cmkeu7zk9000erh0d6pf4coqu",
+        "day": "Sunday",
+        "type": "Online",
+        "serviceType": null,
+        "time": "9 AM SG",
+        "location": "Zoom",
+        "link": "https://zoom.us/j/123456789",
+        "branchId": "cmkeu7zk9000drh0dxgtrcp50",
+        "createdAt": 1768444544,
+        "updatedAt": 1768444544
+    },
+    {
+        "id": "cmkeu7zqg000grh0d0yshvuwp",
+        "day": "Sunday",
+        "type": "Online",
+        "serviceType": null,
+        "time": "9 AM EST",
+        "location": "Zoom",
+        "link": "https://zoom.us/j/123456789",
+        "branchId": "cmkeu7zqg000frh0dkwo68noy",
+        "createdAt": 1768444545,
+        "updatedAt": 1768444545
+    }
+]

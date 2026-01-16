@@ -33,8 +33,8 @@ export async function GET(request: NextRequest, { params }) {
           select: {
             id: true,
             name: true,
-            email: true,
-            role: true
+            role: true,
+            email: true
           }
         }
       }
@@ -66,7 +66,7 @@ export async function PUT(request: NextRequest, { params }) {
     
     // If preacher is being updated, check if the new preacher exists
     if (data.preacherId) {
-      const preacherExists = await prisma.user.findUnique({
+      const preacherExists = await prisma.leadershipTeam.findUnique({
         where: { id: data.preacherId }
       });
       
@@ -93,8 +93,8 @@ export async function PUT(request: NextRequest, { params }) {
           select: {
             id: true,
             name: true,
-            email: true,
-            role: true
+            role: true,
+            email: true
           }
         }
       }

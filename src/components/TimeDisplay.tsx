@@ -2,6 +2,7 @@
 
 import { format } from 'date-fns';
 import { toZonedTime } from 'date-fns-tz';
+import { useState, useEffect } from 'react';
 
 interface TimeDisplayProps {
   timestamp: number;
@@ -15,30 +16,40 @@ function getTimezoneAbbr(date: Date): string {
 }
 
 export function TimeDisplay({ timestamp, format: formatStr = 'p', className }: TimeDisplayProps) {
-  // Get browser's timezone
-  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const [timezone, setTimezone] = useState<string>('UTC');
+  const [isClient, setIsClient] = useState(false);
+  
+  useEffect(() => {
+    setIsClient(true);
+    setTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone);
+  }, []);
   
   // Convert UTC timestamp to browser's local time
   const utcDate = new Date(timestamp * 1000);
-  const localDate = toZonedTime(utcDate, timezone);
+  const localDate = isClient ? toZonedTime(utcDate, timezone) : utcDate;
   
-  // Get timezone abbreviation
-  const tzAbbr = getTimezoneAbbr(localDate);
+  // Get timezone abbreviation only on client
+  const tzAbbr = isClient ? getTimezoneAbbr(localDate) : '';
   
   return (
     <time dateTime={utcDate.toISOString()} className={className}>
-      {format(localDate, formatStr)} {tzAbbr}
+      {format(localDate, formatStr)}{tzAbbr && ` ${tzAbbr}`}
     </time>
   );
 }
 
 export function DateDisplay({ timestamp, format: formatStr = 'PPP', className }: TimeDisplayProps) {
-  // Get browser's timezone
-  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const [timezone, setTimezone] = useState<string>('UTC');
+  const [isClient, setIsClient] = useState(false);
+  
+  useEffect(() => {
+    setIsClient(true);
+    setTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone);
+  }, []);
   
   // Convert UTC timestamp to browser's local time
   const utcDate = new Date(timestamp * 1000);
-  const localDate = toZonedTime(utcDate, timezone);
+  const localDate = isClient ? toZonedTime(utcDate, timezone) : utcDate;
   
   return (
     <time dateTime={utcDate.toISOString()} className={className}>
@@ -48,19 +59,24 @@ export function DateDisplay({ timestamp, format: formatStr = 'PPP', className }:
 }
 
 export function DateTimeDisplay({ timestamp, format: formatStr = 'PPp', className }: TimeDisplayProps) {
-  // Get browser's timezone
-  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const [timezone, setTimezone] = useState<string>('UTC');
+  const [isClient, setIsClient] = useState(false);
+  
+  useEffect(() => {
+    setIsClient(true);
+    setTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone);
+  }, []);
   
   // Convert UTC timestamp to browser's local time
   const utcDate = new Date(timestamp * 1000);
-  const localDate = toZonedTime(utcDate, timezone);
+  const localDate = isClient ? toZonedTime(utcDate, timezone) : utcDate;
   
-  // Get timezone abbreviation
-  const tzAbbr = getTimezoneAbbr(localDate);
+  // Get timezone abbreviation only on client
+  const tzAbbr = isClient ? getTimezoneAbbr(localDate) : '';
   
   return (
     <time dateTime={utcDate.toISOString()} className={className}>
-      {format(localDate, formatStr)} {tzAbbr}
+      {format(localDate, formatStr)}{tzAbbr && ` ${tzAbbr}`}
     </time>
   );
 }

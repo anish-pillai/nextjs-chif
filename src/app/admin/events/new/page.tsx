@@ -1,15 +1,23 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
+
+interface Organizer {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+}
 
 export default function NewEvent() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [organizers, setOrganizers] = useState<Organizer[]>([]);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -19,8 +27,35 @@ export default function NewEvent() {
     endDate: '',
     startTime: '',
     endTime: '',
-    imageUrl: '',
+    hasOrganizer: true,
+    organizerId: '',
   });
+
+  // Fetch organizers on component mount
+  useEffect(() => {
+    const fetchOrganizers = async () => {
+      try {
+        const response = await fetch('/api/users/organizers');
+        if (response.ok) {
+          const data = await response.json();
+          setOrganizers(data.data || []);
+          // Set default organizer to current user if available
+          if (session?.user?.id) {
+            const currentUser = data.data?.find((org: Organizer) => org.id === session.user.id);
+            if (currentUser) {
+              setFormData(prev => ({ ...prev, organizerId: currentUser.id }));
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Failed to fetch organizers:', err);
+      }
+    };
+
+    if (status === 'authenticated') {
+      fetchOrganizers();
+    }
+  }, [status, session]);
 
   // Redirect if not authenticated or not admin/pastor/staff
   if (status === 'unauthenticated') {
@@ -35,8 +70,19 @@ export default function NewEvent() {
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    const { name, value, type } = e.target;
+    
+    if (type === 'checkbox') {
+      const checked = (e.target as HTMLInputElement).checked;
+      setFormData(prev => ({ 
+        ...prev, 
+        [name]: checked,
+        // Clear organizerId when unchecking hasOrganizer
+        ...(name === 'hasOrganizer' && !checked ? { organizerId: '' } : {})
+      }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -56,8 +102,8 @@ export default function NewEvent() {
         type: formData.type,
         startDateTime: startDateTime.toISOString(),
         endDateTime: endDateTime.toISOString(),
-        imageUrl: formData.imageUrl || null,
-        organizerId: session?.user.id,
+        // Only include organizerId if hasOrganizer is true and organizerId is selected
+        ...(formData.hasOrganizer && formData.organizerId && { organizerId: formData.organizerId }),
       };
 
       const response = await fetch('/api/events', {
@@ -70,7 +116,20 @@ export default function NewEvent() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to create event');
+        console.error('Server error response:', errorData);
+        
+        // Handle validation errors specifically
+        if (errorData.error && errorData.error.includes('Validation error')) {
+          try {
+            const validationError = JSON.parse(errorData.error.replace('Validation error: ', ''));
+            const errorMessage = Object.values(validationError).join(', ');
+            throw new Error(`Validation failed: ${errorMessage}`);
+          } catch (parseError) {
+            throw new Error(errorData.error || 'Failed to create event');
+          }
+        }
+        
+        throw new Error(errorData.error || errorData.message || 'Failed to create event');
       }
 
       // Redirect to admin dashboard on success
@@ -171,6 +230,43 @@ export default function NewEvent() {
               </select>
             </div>
 
+            <div className="col-span-2">
+              <div className="flex items-center space-x-3">
+                <input
+                  type="checkbox"
+                  name="hasOrganizer"
+                  id="hasOrganizer"
+                  checked={formData.hasOrganizer}
+                  onChange={handleChange}
+                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                />
+                <label htmlFor="hasOrganizer" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Assign Organizer (Optional)
+                </label>
+              </div>
+            </div>
+
+            {formData.hasOrganizer && (
+              <div className="col-span-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Organizer
+                </label>
+                <select
+                  name="organizerId"
+                  value={formData.organizerId}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="">Select an organizer...</option>
+                  {organizers.map((organizer) => (
+                    <option key={organizer.id} value={organizer.id}>
+                      {organizer.name} ({organizer.role})
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Start Date *
@@ -223,19 +319,6 @@ export default function NewEvent() {
                 value={formData.endTime}
                 onChange={handleChange}
                 required
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
-
-            <div className="col-span-2">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Image URL (optional)
-              </label>
-              <input
-                type="url"
-                name="imageUrl"
-                value={formData.imageUrl}
-                onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />
             </div>

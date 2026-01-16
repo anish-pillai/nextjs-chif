@@ -1,0 +1,79 @@
+[
+    {
+        "id": "cmkeu7yp00000rh0dni2hjz09",
+        "name": "Bowenpally",
+        "address": "# 42, 1st floor, Moksha Arcade,Soujanya Colony, New Bowenpally, Secunderabad",
+        "phone": "+91 988 555 0877",
+        "isActive": true,
+        "order": 0,
+        "createdAt": 1768444543,
+        "updatedAt": 1768444543,
+        "country": "India"
+    },
+    {
+        "id": "cmkeu7yxu0003rh0dpu9dx3on",
+        "name": "Hi-tech City",
+        "address": "1st floor, A*Heights, Cyber Tower Road, Khanamet, Hyd, TG-82.",
+        "phone": "+91 99890 99890",
+        "isActive": true,
+        "order": 1,
+        "createdAt": 1768444544,
+        "updatedAt": 1768444544,
+        "country": "India"
+    },
+    {
+        "id": "cmkeu7z340006rh0dbz36yegu",
+        "name": "Vikrampuri",
+        "address": "11-B, Vikrampuri Colony, Karkhana, Secunderabad, TG-15",
+        "phone": "+91 99890 99890",
+        "isActive": true,
+        "order": 2,
+        "createdAt": 1768444544,
+        "updatedAt": 1768444544,
+        "country": "India"
+    },
+    {
+        "id": "cmkeu7z8m0009rh0dh8ivpsph",
+        "name": "Bangalore",
+        "address": "2nd floor, No 8, 80 feet road, Above Dominios, RT Nagar, Bangalore, Karnataka",
+        "phone": "+91 99890 99890",
+        "isActive": true,
+        "order": 3,
+        "createdAt": 1768444544,
+        "updatedAt": 1768444544,
+        "country": "India"
+    },
+    {
+        "id": "cmkeu7zev000brh0dmup8wmlt",
+        "name": "Tumsar",
+        "address": "Tumsar, Maharashtra, India",
+        "phone": "+91 99890 99890",
+        "isActive": false,
+        "order": 4,
+        "createdAt": 1768444544,
+        "updatedAt": 1768444544,
+        "country": "India"
+    },
+    {
+        "id": "cmkeu7zk9000drh0dxgtrcp50",
+        "name": "Singapore",
+        "address": "Online Service",
+        "phone": "+65 99890 99890",
+        "isActive": false,
+        "order": 5,
+        "createdAt": 1768444544,
+        "updatedAt": 1768444544,
+        "country": "Singapore"
+    },
+    {
+        "id": "cmkeu7zqg000frh0dkwo68noy",
+        "name": "City Harvest AG Church",
+        "address": "Online Service",
+        "phone": "+1 973 905 0486",
+        "isActive": true,
+        "order": 6,
+        "createdAt": 1768444545,
+        "updatedAt": 1768444545,
+        "country": "USA"
+    }
+]

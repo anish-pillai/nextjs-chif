@@ -26,12 +26,14 @@ export function EventForm({ onSuccess }: EventFormProps) {
     const data = {
       title: formData.get('title'),
       description: formData.get('description'),
-      startTime: toUnixTimestamp(formData.get('startTime') as string),
-      endTime: toUnixTimestamp(formData.get('endTime') as string),
+      startDateTime: formData.get('startTime'),
+      endDateTime: formData.get('endTime'),
       location: formData.get('location'),
       type: formData.get('type') as EventType,
       organizerId: 'cm8kts6au00008oe2dur82izo' // Default admin user ID
     };
+
+    console.log('Form data being sent:', data);
 
     // Client-side validation
     try {
@@ -61,7 +63,21 @@ export function EventForm({ onSuccess }: EventFormProps) {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to create event');
+        const errorData = await response.json();
+        console.error('Server response:', errorData);
+        
+        if (errorData.error && errorData.error.includes('Validation error')) {
+          // Parse validation errors from server response
+          try {
+            const validationError = JSON.parse(errorData.error.replace('Validation error: ', ''));
+            setValidationErrors(validationError);
+            return;
+          } catch (parseError) {
+            console.error('Failed to parse validation errors:', parseError);
+          }
+        }
+        
+        throw new Error(errorData.error || 'Failed to create event');
       }
 
       formRef.current?.reset();
@@ -126,8 +142,11 @@ export function EventForm({ onSuccess }: EventFormProps) {
             id="startTime"
             required
             defaultValue={formatDateTimeForInput(getCurrentTimestamp())}
-            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-base py-2 px-3"
+            className={`mt-1 block w-full rounded-md shadow-sm focus:ring-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white ${validationErrors.startDateTime ? 'border-red-500 focus:border-red-500' : 'border-gray-300 dark:border-gray-600 focus:border-primary-500'}`}
           />
+          {validationErrors.startDateTime && (
+            <p className="mt-1 text-sm text-red-600 dark:text-red-400">{validationErrors.startDateTime}</p>
+          )}
         </div>
 
         <div>
@@ -140,8 +159,11 @@ export function EventForm({ onSuccess }: EventFormProps) {
             id="endTime"
             required
             defaultValue={formatDateTimeForInput(getCurrentTimestamp() + 2 * 60 * 60)} // 2 hours from now
-            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-base py-2 px-3"
+            className={`mt-1 block w-full rounded-md shadow-sm focus:ring-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white ${validationErrors.endDateTime ? 'border-red-500 focus:border-red-500' : 'border-gray-300 dark:border-gray-600 focus:border-primary-500'}`}
           />
+          {validationErrors.endDateTime && (
+            <p className="mt-1 text-sm text-red-600 dark:text-red-400">{validationErrors.endDateTime}</p>
+          )}
         </div>
       </div>
 

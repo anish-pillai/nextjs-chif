@@ -60,46 +60,47 @@ export async function GET(req) {
 export async function POST(req) {
   return handleRequest(req, async () => {
     const json = await req.json();
+    console.log('Received event data:', json);
+    
     const validatedData = createEventSchema.parse(json);
+    console.log('Validated event data:', validatedData);
+    
+    // Validate that organizer exists if organizerId is provided
+    let organizerConnection = undefined;
+    if (validatedData.organizerId) {
+      const organizer = await prisma.user.findUnique({
+        where: { id: validatedData.organizerId },
+        select: { id: true, name: true }
+      });
+      
+      if (!organizer) {
+        return errorResponse('Organizer not found', 400);
+      }
+      
+      console.log('Found organizer:', organizer);
+      organizerConnection = {
+        organizer: {
+          connect: { id: validatedData.organizerId }
+        }
+      };
+    }
     
     // Create event data with proper structure for Prisma
-    const data = {
+    const now = Math.floor(Date.now() / 1000);
+    const eventData = {
       title: validatedData.title,
       description: validatedData.description,
       location: validatedData.location,
       type: validatedData.type,
       startTime: Math.floor(new Date(validatedData.startDateTime).getTime() / 1000),
       endTime: Math.floor(new Date(validatedData.endDateTime).getTime() / 1000),
-      createdAt: validatedData.createdAt ?? Math.floor(Date.now() / 1000),
-      updatedAt: validatedData.updatedAt ?? Math.floor(Date.now() / 1000),
-      // Properly format organizer relationship
-      organizer: validatedData.organizerId ? {
-        connect: { id: validatedData.organizerId }
-      } : undefined
-    };
-    
-    // Convert timestamps to integers and add createdAt/updatedAt
-    const now = Math.floor(Date.now() / 1000);
-    const eventData = {
-      ...data,
-      startTime: data.startTime,
-      endTime: data.endTime,
       createdAt: now,
-      updatedAt: now
+      updatedAt: now,
+      // Only include organizer connection if organizerId is provided
+      ...(organizerConnection || {})
     };
     
-    // Check if organizer exists when an organizer is specified
-    if (validatedData.organizerId) {
-      const organizerExists = await prisma.user.findUnique({
-        where: { id: validatedData.organizerId }
-      });
-      
-      if (!organizerExists) {
-        return errorResponse('Organizer not found');
-      }
-    }
-    
-
+    console.log('Final event data for Prisma:', eventData);
     
     const event = await prisma.event.create({
       data: eventData,

@@ -43,8 +43,14 @@ export function notFoundResponse(resource: string): NextResponse<ApiResponse<nev
 }
 
 export function handleZodError(error: ZodError): NextResponse<ApiResponse<never>> {
-  const formatted = error.format();
-  return errorResponse(`Validation error: ${JSON.stringify(formatted)}`, 400);
+  const errors: Record<string, string> = {};
+  
+  error.errors.forEach((err) => {
+    const path = err.path.join('.');
+    errors[path] = err.message;
+  });
+  
+  return errorResponse(`Validation error: ${JSON.stringify(errors)}`, 400);
 }
 
 export async function handleRequest(
