@@ -19,8 +19,7 @@ export async function GET(request, { params }) {
     const user = await prisma.user.findUnique({
       where: { id },
       include: {
-        events: true,
-        sermons: true
+        events: true
       }
     });
     
