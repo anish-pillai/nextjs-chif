@@ -1,4 +1,3 @@
-import React from 'react';
 import { prisma } from '@/lib/db';
 import { SermonsPageClient } from './components/SermonsPageClient';
 
