@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { HeroSection } from '@/components/HeroSection';
 import { getSiteConfig } from '@/lib/site-config';
 
 const givingOptions = [
@@ -79,17 +80,12 @@ const GivePage = async () => {
   
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
-      {/* Hero Section */}
-      <section className="bg-primary-50 dark:bg-gray-800 py-20">
-        <div className="container mx-auto px-4">
-          <h1 className="text-4xl md:text-5xl font-bold text-center mb-6">
-            Give to {siteConfig.name}
-          </h1>
-          <p className="text-xl text-center text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            Support our mission to spread God&apos;s love and make a difference in our community.
-          </p>
-        </div>
-      </section>
+      <HeroSection
+        title={`Give to ${siteConfig.name}`}
+        description="Support our mission to spread God's love and make a difference in our community."
+        siteConfig={siteConfig}
+        reducedHeight={true}
+      />
 
       {/* Giving Options */}
       <section className="py-16">

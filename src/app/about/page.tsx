@@ -1,4 +1,5 @@
 import { Users, Heart, BookOpen } from 'lucide-react';
+import { HeroSection } from '@/components/HeroSection';
 import { prisma } from '@/lib/prisma';
 import { getSiteConfig } from '@/lib/site-config';
 
@@ -31,16 +32,12 @@ export default async function About() {
   
   return (
     <div>
-      {/* Hero Section */}
-      <section className="bg-primary-50 dark:bg-gray-800 py-20">
-        <div className="container mx-auto px-4">
-          <h1 className="text-4xl md:text-5xl font-bold text-center mb-6">About {siteConfig.name}</h1>
-          <p className="text-xl text-center text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            {siteConfig.titleHeader} {siteConfig.titleSubHeader} is a vibrant, multicultural community of believers
-            dedicated to sharing God's love and making a positive impact in our city.
-          </p>
-        </div>
-      </section>
+      <HeroSection
+        title={`About ${siteConfig.name}`}
+        description={`${siteConfig.titleHeader} ${siteConfig.titleSubHeader} is a vibrant, multicultural community of believers dedicated to sharing God's love and making a positive impact in our city.`}
+        siteConfig={siteConfig}
+        reducedHeight={true}
+      />
 
       {/* Mission & Values */}
       <section className="py-16">

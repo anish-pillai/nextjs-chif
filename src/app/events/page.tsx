@@ -1,5 +1,6 @@
 import React from 'react';
 import { DateDisplay, TimeDisplay } from '@/components/TimeDisplay';
+import { HeroSection } from '@/components/HeroSection';
 import { prisma } from '@/lib/db';
 import { EventsCalendar } from './components/EventsCalendar';
 import { EventType } from '@prisma/client';
@@ -54,37 +55,11 @@ export default async function EventsPage() {
   
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
-      {/* Hero Section */}
-      <section className="bg-primary-50 dark:bg-gray-800 py-20">
-        <div className="container mx-auto px-4">
-          <h1 className="text-4xl md:text-5xl font-bold text-center mb-6 text-gray-900 dark:text-white">Events Calendar</h1>
-          <p className="text-xl text-center text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            Stay connected with our church community through our various events and activities.
-          </p>
-        </div>
-      </section>
-
-      {/* Event Filters */}
-      <div className="bg-white dark:bg-gray-900 py-12">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <div className="flex gap-4 justify-center flex-wrap">
-              <a href="/events" className="px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-all duration-200 shadow-sm hover:shadow-md">
-                All Events
-              </a>
-              {eventTypes.map((type) => (
-                <a 
-                  key={type}
-                  href={`/events?type=${type}`}
-                  className="px-6 py-3 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 shadow-sm hover:shadow-md border border-gray-200 dark:border-gray-700"
-                >
-                  {type.charAt(0) + type.slice(1).toLowerCase()}
-                </a>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
+      <HeroSection
+        title="Events Calendar"
+        description="Stay connected with our church community through our various events and activities."
+        reducedHeight={true}
+      />
 
       {/* Calendar Section */}
       <div className="container mx-auto px-4 py-12">

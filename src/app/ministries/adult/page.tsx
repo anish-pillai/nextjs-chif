@@ -1,5 +1,6 @@
 import React from 'react';
 import { Users, Clock, Calendar, MapPin } from 'lucide-react';
+import { HeroSection } from '@/components/HeroSection';
 
 const AdultMinistryPage = () => {
   const ministryOpportunities = [
@@ -22,15 +23,11 @@ const AdultMinistryPage = () => {
 
   return (
     <div>
-      {/* Hero Section */}
-      <section className="bg-primary-50 dark:bg-gray-800 py-20">
-        <div className="container mx-auto px-4">
-          <h1 className="text-4xl md:text-5xl font-bold text-center mb-6">Adult Ministry</h1>
-          <p className="text-xl text-center text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            Growing together in faith through fellowship, study, and service.
-          </p>
-        </div>
-      </section>
+      <HeroSection
+        title="Adult Ministry"
+        description="Growing together in faith through fellowship, study, and service."
+        reducedHeight={true}
+      />
 
       {/* About Section */}
       <section className="py-16">

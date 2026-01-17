@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { format } from 'date-fns';
 import { VideoModal } from './VideoModal';
+import { HeroSection } from '@/components/HeroSection';
 
 type SermonWithPreacher = {
   id: string;
@@ -70,17 +71,11 @@ export function SermonsPageClient({ sermons, seriesList }: SermonsPageClientProp
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
-      {/* Hero Section */}
-      <section className="bg-primary-50 dark:bg-gray-800 py-20">
-        <div className="container mx-auto px-4">
-          <h1 className="text-4xl md:text-5xl font-bold text-center mb-6">
-            Sermon Archive
-          </h1>
-          <p className="text-xl text-center text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            Explore our collection of messages that inspire, teach, and transform.
-          </p>
-        </div>
-      </section>
+      <HeroSection
+        title="Sermon Archive"
+        description="Explore our collection of messages that inspire, teach, and transform."
+        reducedHeight={true}
+      />
 
       {/* Search Section */}
       <div className="container mx-auto px-4 py-8">

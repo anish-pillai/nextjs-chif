@@ -21,7 +21,7 @@ export default function AuthButton() {
     return (
       <button
         onClick={() => signIn('google')}
-        className="px-4 py-2 text-sm font-medium text-white bg-blue-600 dark:bg-blue-700 rounded-md hover:bg-blue-700 dark:hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+        className="px-4 py-2 text-sm font-medium text-white bg-primary-600 dark:bg-primary-700 rounded-md hover:bg-primary-700 dark:hover:bg-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
       >
         Sign In
       </button>
@@ -46,7 +46,7 @@ export default function AuthButton() {
             />
           </div>
         ) : (
-          <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white">
+          <div className="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center text-white">
             {session?.user?.name?.charAt(0) || 'U'}
           </div>
         )}

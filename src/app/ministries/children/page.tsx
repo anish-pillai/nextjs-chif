@@ -1,5 +1,6 @@
 import React from 'react';
 import { Clock, Calendar, MapPin } from 'lucide-react';
+import { HeroSection } from '@/components/HeroSection';
 
 const ChildrensMinistryPage = () => {
   const ageGroups = [
@@ -22,15 +23,11 @@ const ChildrensMinistryPage = () => {
 
   return (
     <div>
-      {/* Hero Section */}
-      <section className="bg-primary-50 dark:bg-gray-800 py-20">
-        <div className="container mx-auto px-4">
-          <h1 className="text-4xl md:text-5xl font-bold text-center mb-6">Children&apos;s Ministry</h1>
-          <p className="text-xl text-center text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            Nurturing young hearts in the love and knowledge of Christ.
-          </p>
-        </div>
-      </section>
+      <HeroSection
+        title="Children's Ministry"
+        description="Nurturing young hearts in the love and knowledge of Christ."
+        reducedHeight={true}
+      />
 
       {/* About Section */}
       <section className="py-16">

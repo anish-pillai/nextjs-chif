@@ -8,7 +8,6 @@ import { EventModal } from './EventModal';
 
 // Import the custom Event type that includes organizer information
 import { Event as ChurchEvent } from '@/types';
-import { formatDateTime } from '@/lib/utils';
 
 interface EventsCalendarProps {
   events: ChurchEvent[];
@@ -46,7 +45,7 @@ export function EventsCalendar({ events }: EventsCalendarProps) {
           headerToolbar={{
             left: 'prev,next today',
             center: 'title',
-            right: 'dayGridMonth,dayGridWeek'
+            right: 'dayGridMonth'
           }}
           eventContent={renderEventContent}
           height="auto"
@@ -76,13 +75,13 @@ export function EventsCalendar({ events }: EventsCalendarProps) {
 
 function renderEventContent(eventInfo: EventContentArg) {
   return (
-    <div className="p-1 hover:bg-primary-50 dark:hover:bg-primary-900/20 cursor-pointer transition-colors rounded group">
+    <div className="p-1 hover:bg-primary-50 dark:bg-primary-500 hover:bg-primary-900/20 cursor-pointer transition-colors rounded group">
       <div className="font-semibold text-sm truncate group-hover:text-primary-600 dark:group-hover:text-primary-400">{eventInfo.event.title}</div>
-      <div className="text-xs text-gray-600 dark:text-gray-300 truncate group-hover:text-primary-500/80 dark:group-hover:text-primary-300/80">
+      <div className="text-xs text-gray-100 dark:text-gray-300 truncate group-hover:text-primary-500/80 dark:group-hover:text-primary-300/80">
         {eventInfo.event.start?.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })} - 
         {eventInfo.event.end?.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}
       </div>
-      <div className="text-xs text-gray-600 dark:text-gray-300 truncate group-hover:text-primary-500/80 dark:group-hover:text-primary-300/80">
+      <div className="text-xs text-gray-100 dark:text-gray-300 truncate group-hover:text-primary-500/80 dark:group-hover:text-primary-300/80">
         {eventInfo.event.extendedProps.location}
       </div>
     </div>

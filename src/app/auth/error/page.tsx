@@ -29,7 +29,7 @@ function ErrorContent() {
           </p>
         </div>
         <div className="flex justify-center">
-          <Link href="/auth/signin" className="text-blue-600 hover:text-blue-800">
+          <Link href="/auth/signin" className="text-primary-600 hover:text-primary-800">
             Return to sign in
           </Link>
         </div>

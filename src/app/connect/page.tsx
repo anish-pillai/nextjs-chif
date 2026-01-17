@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { HeroSection } from '@/components/HeroSection';
 import { smallGroups } from '@/data/smallGroups';
 
 
@@ -6,17 +7,11 @@ import { smallGroups } from '@/data/smallGroups';
 const ConnectPage = () => {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
-      {/* Hero Section */}
-      <section className="bg-primary-50 dark:bg-gray-800 py-20">
-        <div className="container mx-auto px-4">
-          <h1 className="text-4xl md:text-5xl font-bold text-center mb-6">
-            Connect With Us
-          </h1>
-          <p className="text-xl text-center text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            We&apos;d love to hear from you and help you get connected to our church family.
-          </p>
-        </div>
-      </section>
+      <HeroSection
+        title="Connect With Us"
+        description="We'd love to hear from you and help you get connected to our church family."
+        reducedHeight={true}
+      />
 
       {/* Contact Section */}
       <section className="py-16">

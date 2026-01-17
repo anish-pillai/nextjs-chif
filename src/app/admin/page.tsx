@@ -481,7 +481,7 @@ function AdminDashboardContent() {
             setActiveTab('users');
             router.push('/admin?tab=users');
           }}
-          className={`py-2 px-4 font-medium ${activeTab === 'users' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-blue-500'}`}
+          className={`py-2 px-4 font-medium ${activeTab === 'users' ? 'text-primary-600 border-b-2 border-primary-600' : 'text-gray-500 hover:text-primary-500'}`}
         >
           Users
         </button>
@@ -490,7 +490,7 @@ function AdminDashboardContent() {
             setActiveTab('events');
             router.push('/admin?tab=events');
           }}
-          className={`py-2 px-4 font-medium ${activeTab === 'events' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-blue-500'}`}
+          className={`py-2 px-4 font-medium ${activeTab === 'events' ? 'text-primary-600 border-b-2 border-primary-600' : 'text-gray-500 hover:text-primary-500'}`}
         >
           Events
         </button>
@@ -499,7 +499,7 @@ function AdminDashboardContent() {
             setActiveTab('sermons');
             router.push('/admin?tab=sermons');
           }}
-          className={`py-2 px-4 font-medium ${activeTab === 'sermons' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-blue-500'}`}
+          className={`py-2 px-4 font-medium ${activeTab === 'sermons' ? 'text-primary-600 border-b-2 border-primary-600' : 'text-gray-500 hover:text-primary-500'}`}
         >
           Sermons
         </button>
@@ -508,7 +508,7 @@ function AdminDashboardContent() {
             setActiveTab('leadership');
             router.push('/admin?tab=leadership');
           }}
-          className={`py-2 px-4 font-medium ${activeTab === 'leadership' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-blue-500'}`}
+          className={`py-2 px-4 font-medium ${activeTab === 'leadership' ? 'text-primary-600 border-b-2 border-primary-600' : 'text-gray-500 hover:text-primary-500'}`}
         >
           Leadership Team
         </button>
@@ -517,7 +517,7 @@ function AdminDashboardContent() {
             setActiveTab('branches');
             router.push('/admin?tab=branches');
           }}
-          className={`py-2 px-4 font-medium ${activeTab === 'branches' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-blue-500'}`}
+          className={`py-2 px-4 font-medium ${activeTab === 'branches' ? 'text-primary-600 border-b-2 border-primary-600' : 'text-gray-500 hover:text-primary-500'}`}
         >
           Branches
         </button>
@@ -526,7 +526,7 @@ function AdminDashboardContent() {
             setActiveTab('sites');
             router.push('/admin?tab=sites');
           }}
-          className={`py-2 px-4 font-medium ${activeTab === 'sites' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-blue-500'}`}
+          className={`py-2 px-4 font-medium ${activeTab === 'sites' ? 'text-primary-600 border-b-2 border-primary-600' : 'text-gray-500 hover:text-primary-500'}`}
         >
           Sites
         </button>
@@ -558,7 +558,7 @@ function AdminDashboardContent() {
                         <select
                           value={user.role}
                           onChange={(e) => updateUserRole(user.id, e.target.value)}
-                          className="mt-1 block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                          className="mt-1 block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
                         >
                           <option value="ADMIN">Admin</option>
                           <option value="PASTOR">Pastor</option>
@@ -580,7 +580,7 @@ function AdminDashboardContent() {
               <h2 className="text-xl font-semibold">Event Management</h2>
               <Link 
                 href="/admin/events/new" 
-                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                className="px-4 py-2 bg-primary-600 text-white rounded hover:bg-primary-700 transition-colors"
               >
                 Add New Event
               </Link>
@@ -607,7 +607,7 @@ function AdminDashboardContent() {
                       <td className="px-6 py-4 whitespace-nowrap space-x-2">
                         <Link 
                           href={`/admin/events/edit/${event.id}`}
-                          className="text-blue-600 hover:text-blue-800"
+                          className="text-primary-600 hover:text-primary-800"
                         >
                           Edit
                         </Link>
@@ -632,7 +632,7 @@ function AdminDashboardContent() {
               <h2 className="text-xl font-semibold">Sermon Management</h2>
               <Link 
                 href="/admin/sermons/new" 
-                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                className="px-4 py-2 bg-primary-600 text-white rounded hover:bg-primary-700 transition-colors"
               >
                 Add New Sermon
               </Link>
@@ -659,7 +659,7 @@ function AdminDashboardContent() {
                       <td className="px-6 py-4 whitespace-nowrap space-x-2">
                         <Link 
                           href={`/admin/sermons/edit/${sermon.id}`}
-                          className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                          className="text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300"
                         >
                           Edit
                         </Link>
@@ -688,7 +688,7 @@ function AdminDashboardContent() {
               <h2 className="text-xl font-semibold">Church Branches Management 234234</h2>
               <Link 
                 href="/admin/branches/new"
-                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                className="px-4 py-2 bg-primary-600 text-white rounded hover:bg-primary-700 transition-colors"
               >
                 Add New Branch
               </Link>
@@ -734,7 +734,7 @@ function AdminDashboardContent() {
                       <td className="px-6 py-4 whitespace-nowrap space-x-2">
                         <Link 
                           href={`/admin/branches/edit/${branch.id}`}
-                          className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                          className="text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300"
                         >
                           Edit
                         </Link>
@@ -773,7 +773,7 @@ function AdminDashboardContent() {
               <h2 className="text-xl font-semibold">Leadership Team Management</h2>
               <button 
                 onClick={() => openLeadershipModal()}
-                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                className="px-4 py-2 bg-primary-600 text-white rounded hover:bg-primary-700 transition-colors"
               >
                 Add New Member
               </button>
@@ -798,7 +798,7 @@ function AdminDashboardContent() {
                       <td className="px-6 py-4 whitespace-nowrap space-x-2">
                         <button 
                           onClick={() => openLeadershipModal(member)}
-                          className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                          className="text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300"
                         >
                           Edit
                         </button>

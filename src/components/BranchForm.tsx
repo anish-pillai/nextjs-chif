@@ -137,7 +137,7 @@ export function BranchForm({ branch, onSubmit, onCancel, loading = false, title 
               name="name"
               required
               defaultValue={branch?.name || ''}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
             />
           </div>
           
@@ -149,7 +149,7 @@ export function BranchForm({ branch, onSubmit, onCancel, loading = false, title 
               type="text"
               name="country"
               defaultValue={branch?.country || ''}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
             />
           </div>
           
@@ -162,7 +162,7 @@ export function BranchForm({ branch, onSubmit, onCancel, loading = false, title 
               required
               rows={3}
               defaultValue={branch?.address || ''}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
             />
           </div>
           
@@ -173,7 +173,7 @@ export function BranchForm({ branch, onSubmit, onCancel, loading = false, title 
             <select
               name="sites"
               multiple
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
             >
               {sites?.map((site) => (
                 <option 
@@ -197,7 +197,7 @@ export function BranchForm({ branch, onSubmit, onCancel, loading = false, title 
               name="phone"
               required
               defaultValue={branch?.phone || ''}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
             />
           </div>
           
@@ -210,7 +210,7 @@ export function BranchForm({ branch, onSubmit, onCancel, loading = false, title 
               name="order"
               defaultValue={branch?.order || 0}
               min="0"
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
             />
           </div>
           
@@ -219,7 +219,7 @@ export function BranchForm({ branch, onSubmit, onCancel, loading = false, title 
               type="checkbox"
               name="isActive"
               defaultChecked={branch?.isActive ?? true}
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500"
+              className="h-4 w-4 text-primary-600 focus:ring-primary-500"
             />
             <label className="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">
               Active
@@ -234,7 +234,7 @@ export function BranchForm({ branch, onSubmit, onCancel, loading = false, title 
             <button
               type="button"
               onClick={addService}
-              className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors"
+              className="px-3 py-1 bg-primary-600 text-white text-sm rounded hover:bg-primary-700 transition-colors"
             >
               Add Service Time
             </button>
@@ -251,7 +251,7 @@ export function BranchForm({ branch, onSubmit, onCancel, loading = false, title 
                     <select
                       value={service.day}
                       onChange={(e) => updateService(index, 'day', e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                     >
                       <option value="Sunday">Sunday</option>
                       <option value="Monday">Monday</option>
@@ -270,7 +270,7 @@ export function BranchForm({ branch, onSubmit, onCancel, loading = false, title 
                     <select
                       value={service.type}
                       onChange={(e) => updateService(index, 'type', e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                     >
                       <option value="In-Person">In-Person</option>
                       <option value="Online">Online</option>
@@ -286,7 +286,7 @@ export function BranchForm({ branch, onSubmit, onCancel, loading = false, title 
                       value={service.serviceType || ''}
                       onChange={(e) => updateService(index, 'serviceType', e.target.value)}
                       placeholder="e.g., English Service, Youth Service"
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                     />
                   </div>
                   
@@ -299,7 +299,7 @@ export function BranchForm({ branch, onSubmit, onCancel, loading = false, title 
                       value={service.time}
                       onChange={(e) => updateService(index, 'time', e.target.value)}
                       placeholder="e.g., 10:00 AM"
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                     />
                   </div>
                   
@@ -312,7 +312,7 @@ export function BranchForm({ branch, onSubmit, onCancel, loading = false, title 
                       value={service.location}
                       onChange={(e) => updateService(index, 'location', e.target.value)}
                       placeholder="e.g., Main Sanctuary, Zoom"
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                     />
                   </div>
                   
@@ -325,7 +325,7 @@ export function BranchForm({ branch, onSubmit, onCancel, loading = false, title 
                       value={service.link || ''}
                       onChange={(e) => updateService(index, 'link', e.target.value)}
                       placeholder="https://zoom.us/j/123456789"
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                     />
                   </div>
                 </div>
@@ -355,7 +355,7 @@ export function BranchForm({ branch, onSubmit, onCancel, loading = false, title 
           <button
             type="submit"
             disabled={loading}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50"
+            className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition-colors disabled:opacity-50"
           >
             {loading ? 'Saving...' : (branch?.id ? 'Save Changes' : 'Create Branch')}
           </button>

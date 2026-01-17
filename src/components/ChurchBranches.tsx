@@ -158,7 +158,7 @@ export function ChurchBranches({ branches: initialBranches, sites, onEdit, onTog
                     {showActions && onEdit && (
                       <button
                         onClick={() => onEdit(branch)}
-                        className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium"
+                        className="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 text-sm font-medium"
                       >
                         Edit
                       </button>
@@ -188,7 +188,7 @@ export function ChurchBranches({ branches: initialBranches, sites, onEdit, onTog
                       <Globe className="h-5 w-5 text-primary-600 dark:text-primary-400 mt-0.5 flex-shrink-0" />
                       <div className="flex flex-wrap gap-1">
                         {branch.branchSites.map((bs: any) => (
-                          <span key={bs.siteId} className="inline-block bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs px-2 py-1 rounded">
+                          <span key={bs.siteId} className="inline-block bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200 text-xs px-2 py-1 rounded">
                             {bs.site.name}
                           </span>
                         ))}
@@ -244,7 +244,7 @@ export function ChurchBranches({ branches: initialBranches, sites, onEdit, onTog
                   <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
                     <button
                       onClick={() => onEdit?.(branch)}
-                      className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors"
+                      className="px-3 py-1 bg-primary-600 text-white text-sm rounded hover:bg-primary-700 transition-colors"
                     >
                       Edit
                     </button>

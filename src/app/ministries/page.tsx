@@ -1,6 +1,7 @@
 import React from 'react';
 import { Users, Heart, BookOpen, Music, Baby, UserPlus } from 'lucide-react';
 import Link from 'next/link';
+import { HeroSection } from '@/components/HeroSection';
 
 export default function Ministries() {
   const ministries = [
@@ -32,14 +33,11 @@ export default function Ministries() {
 
   return (
     <div>
-      <section className="bg-primary-50 dark:bg-gray-800 py-20">
-        <div className="container mx-auto px-4">
-          <h1 className="text-4xl md:text-5xl font-bold text-center mb-6">Our Ministries</h1>
-          <p className="text-xl text-center text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            Discover how you can grow in faith and serve others through our various ministry opportunities.
-          </p>
-        </div>
-      </section>
+      <HeroSection
+        title="Our Ministries"
+        description="Discover how you can grow in faith and serve others through our various ministry opportunities."
+        reducedHeight={true}
+      />
 
       <section className="py-16">
         <div className="container mx-auto px-4">
