@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { ConfirmModal } from '@/components/ConfirmModal';
 import { LeadershipModal } from '@/components/LeadershipModal';
+import SitesManagement from './sites/page';
 
 interface User {
   id: string;
@@ -63,7 +64,7 @@ function AdminDashboardContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const tabParam = searchParams.get('tab');
-  const [activeTab, setActiveTab] = useState(tabParam && ['users', 'events', 'sermons', 'leadership', 'branches'].includes(tabParam) ? tabParam : 'users');
+  const [activeTab, setActiveTab] = useState(tabParam && ['users', 'events', 'sermons', 'leadership', 'branches', 'sites'].includes(tabParam) ? tabParam : 'users');
   const [users, setUsers] = useState<User[]>([]);
   const [events, setEvents] = useState<Event[]>([]);
   const [sermons, setSermons] = useState<Sermon[]>([]);
@@ -520,6 +521,15 @@ function AdminDashboardContent() {
         >
           Branches
         </button>
+        <button
+          onClick={() => {
+            setActiveTab('sites');
+            router.push('/admin?tab=sites');
+          }}
+          className={`py-2 px-4 font-medium ${activeTab === 'sites' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-blue-500'}`}
+        >
+          Sites
+        </button>
       </div>
       
       {/* Content based on active tab */}
@@ -675,7 +685,7 @@ function AdminDashboardContent() {
         {activeTab === 'branches' && (
           <div className="p-6">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold">Church Branches Management</h2>
+              <h2 className="text-xl font-semibold">Church Branches Management 234234</h2>
               <Link 
                 href="/admin/branches/new"
                 className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
@@ -692,6 +702,7 @@ function AdminDashboardContent() {
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Country</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Address</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Phone</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Site</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
                   </tr>
@@ -703,6 +714,14 @@ function AdminDashboardContent() {
                       <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">{branch.country || '-'}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">{branch.address}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">{branch.phone}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">
+                        {branch.branchSites && branch.branchSites.length > 0 
+                          ? branch.branchSites.map((bs: any) => bs.site.name).join(', ')
+                          : branch.site 
+                            ? `${branch.site.name} (${branch.site.domain})`
+                            : '-'
+                        }
+                      </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className={`px-2 py-1 text-xs font-medium rounded-full ${
                           branch.isActive 
@@ -800,6 +819,10 @@ function AdminDashboardContent() {
               </table>
             </div>
           </div>
+        )}
+        
+        {activeTab === 'sites' && (
+          <SitesManagement />
         )}
       </div>
 

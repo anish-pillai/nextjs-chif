@@ -42,6 +42,16 @@ export function notFoundResponse(resource: string): NextResponse<ApiResponse<nev
   return errorResponse(`${resource} not found`, 404);
 }
 
+export function deletedResponse(message = 'Resource deleted successfully'): NextResponse<ApiResponse<never>> {
+  return NextResponse.json(
+    {
+      success: true,
+      message,
+    },
+    { status: 200, headers: corsHeaders }
+  );
+}
+
 export function handleZodError(error: ZodError): NextResponse<ApiResponse<never>> {
   const errors: Record<string, string> = {};
   

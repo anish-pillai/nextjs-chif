@@ -21,6 +21,17 @@ export async function GET() {
       include: {
         services: {
           orderBy: { day: 'asc' }
+        },
+        branchSites: {
+          include: {
+            site: {
+              select: {
+                id: true,
+                name: true,
+                domain: true
+              }
+            }
+          }
         }
       }
     });

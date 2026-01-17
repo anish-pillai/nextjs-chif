@@ -3,6 +3,7 @@
 import { createContext, useContext } from 'react';
 
 export interface SiteConfig {
+  id?: string;
   name: string;
   titleHeader: string;
   titleSubHeader: string;

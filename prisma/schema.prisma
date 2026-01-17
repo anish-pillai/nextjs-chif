@@ -117,13 +117,17 @@ model ChurchBranch {
   phone       String
   isActive    Boolean  @default(true)
   order       Int      @default(0)
+  siteId      String?  // Link to Site (optional for backward compatibility)
+  site        Site?    @relation(fields: [siteId], references: [id], onDelete: SetNull)
   createdAt   Int      @default(dbgenerated("extract(epoch from now())::integer"))
   updatedAt   Int      @default(dbgenerated("extract(epoch from now())::integer"))
   services    Service[]
+  branchSites BranchSite[]
 
   @@index([order])
   @@index([isActive])
   @@index([country])
+  @@index([siteId])
 }
 
 model Service {
@@ -140,6 +144,39 @@ model Service {
   updatedAt    Int          @default(dbgenerated("extract(epoch from now())::integer"))
 
   @@index([branchId])
+}
+
+model Site {
+  id              String   @id @default(cuid())
+  domain          String   @unique
+  name            String
+  titleHeader     String
+  titleSubHeader  String
+  description     String
+  logo            String
+  isActive        Boolean  @default(true)
+  isDefault       Boolean  @default(false)
+  createdAt       Int      @default(dbgenerated("extract(epoch from now())::integer"))
+  updatedAt       Int      @default(dbgenerated("extract(epoch from now())::integer"))
+  branches        ChurchBranch[]
+  branchSites     BranchSite[]
+
+  @@index([domain])
+  @@index([isActive])
+  @@index([isDefault])
+}
+
+model BranchSite {
+  id       String @id @default(cuid())
+  branchId String
+  siteId   String
+  branch   ChurchBranch @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  site     Site         @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  createdAt Int @default(dbgenerated("extract(epoch from now())::integer"))
+
+  @@unique([branchId, siteId])
+  @@index([branchId])
+  @@index([siteId])
 }
 
 enum Role {

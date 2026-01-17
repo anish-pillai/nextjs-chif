@@ -3,9 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { ChurchBranches } from '@/components/ChurchBranches';
+import { BranchForm } from '@/components/BranchForm';
 import { ConfirmModal } from '@/components/ConfirmModal';
-import { prisma } from '@/lib/db';
 import Link from 'next/link';
 
 interface ServiceFormData {
@@ -26,6 +25,7 @@ interface BranchFormData {
   phone: string;
   isActive: boolean;
   order: number;
+  siteIds: string[];
   services?: ServiceFormData[];
 }
 
@@ -34,7 +34,6 @@ export default function EditBranchPage({ params }: { params: Promise<{ id: strin
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [services, setServices] = useState<ServiceFormData[]>([]);
   const [editingBranch, setEditingBranch] = useState<BranchFormData | null>(null);
   const [confirmModal, setConfirmModal] = useState({
     isOpen: false,
@@ -59,9 +58,19 @@ export default function EditBranchPage({ params }: { params: Promise<{ id: strin
     const fetchBranch = async () => {
       try {
         const resolvedParams = await params;
+        console.log('Fetching branch with ID:', resolvedParams.id);
         const response = await fetch(`/api/branches/${resolvedParams.id}`);
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error('API Error:', errorData);
+          throw new Error(errorData.error || `Failed to fetch branch: ${response.status}`);
+        }
+        
         const data = await response.json();
         const fullBranch = data.data;
+        
+        console.log('Branch data:', fullBranch);
         
         setEditingBranch({
           id: fullBranch.id,
@@ -70,12 +79,13 @@ export default function EditBranchPage({ params }: { params: Promise<{ id: strin
           address: fullBranch.address,
           phone: fullBranch.phone,
           isActive: fullBranch.isActive,
-          order: fullBranch.order
+          order: fullBranch.order,
+          siteIds: fullBranch.branchSites?.map((bs: any) => bs.siteId) || [],
+          services: fullBranch.services || []
         });
-        
-        setServices(fullBranch.services || []);
       } catch (err) {
-        setError('Failed to fetch branch details');
+        console.error('Fetch error:', err);
+        setError(err instanceof Error ? err.message : 'Failed to fetch branch details');
       }
     };
 
@@ -86,24 +96,12 @@ export default function EditBranchPage({ params }: { params: Promise<{ id: strin
 
   const handleSubmit = async (branchData: BranchFormData) => {
     try {
-      const dataWithServices = {
-        ...branchData,
-        services: services.map(service => ({
-          day: service.day,
-          type: service.type,
-          serviceType: service.serviceType || '',
-          time: service.time,
-          location: service.location,
-          link: service.link || ''
-        }))
-      };
-      
       const response = await fetch(`/api/branches/${editingBranch?.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(dataWithServices),
+        body: JSON.stringify(branchData),
       });
 
       if (!response.ok) {
@@ -114,27 +112,6 @@ export default function EditBranchPage({ params }: { params: Promise<{ id: strin
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     }
-  };
-
-  const addService = () => {
-    setServices([...services, {
-      day: 'Sunday',
-      type: 'In-Person',
-      serviceType: '',
-      time: '10:00 AM',
-      location: '',
-      link: ''
-    }]);
-  };
-
-  const removeService = (index: number) => {
-    setServices(services.filter((_, i) => i !== index));
-  };
-
-  const updateService = (index: number, field: keyof ServiceFormData, value: string) => {
-    const updatedServices = [...services];
-    updatedServices[index] = { ...updatedServices[index], [field]: value };
-    setServices(updatedServices);
   };
 
   const handleDelete = () => {
@@ -195,243 +172,14 @@ export default function EditBranchPage({ params }: { params: Promise<{ id: strin
         </div>
       )}
 
-      <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
-        <form onSubmit={(e) => {
-          e.preventDefault();
-          const form = e.currentTarget;
-          const branchData: BranchFormData = {
-            name: (form.elements.namedItem('name') as HTMLInputElement).value,
-            country: (form.elements.namedItem('country') as HTMLInputElement)?.value || undefined,
-            address: (form.elements.namedItem('address') as HTMLTextAreaElement).value,
-            phone: (form.elements.namedItem('phone') as HTMLInputElement).value,
-            isActive: (form.elements.namedItem('isActive') as HTMLInputElement).checked,
-            order: parseInt((form.elements.namedItem('order') as HTMLInputElement).value || '0')
-          };
-          
-          if (editingBranch) {
-            branchData.id = editingBranch.id;
-          }
-          
-          handleSubmit(branchData);
-        }} className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Branch Name *
-              </label>
-              <input
-                type="text"
-                name="name"
-                defaultValue={editingBranch?.name || ''}
-                required
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Country
-              </label>
-              <input
-                type="text"
-                name="country"
-                defaultValue={editingBranch?.country || ''}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Address *
-              </label>
-              <textarea
-                name="address"
-                defaultValue={editingBranch?.address || ''}
-                required
-                rows={3}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Phone *
-              </label>
-              <input
-                type="tel"
-                name="phone"
-                defaultValue={editingBranch?.phone || ''}
-                required
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Display Order
-              </label>
-              <input
-                type="number"
-                name="order"
-                defaultValue={editingBranch?.order?.toString() || '0'}
-                min="0"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-              />
-            </div>
-            
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                name="isActive"
-                defaultChecked={editingBranch?.isActive ?? true}
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500"
-              />
-              <label className="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-                Active Branch
-              </label>
-            </div>
-          </div>
-          
-          {/* Service Management Section */}
-          <div className="mt-6 border-t border-gray-200 dark:border-gray-700 pt-6">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-medium text-gray-900 dark:text-white">Service Timings</h3>
-              <button
-                type="button"
-                onClick={addService}
-                className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition-colors"
-              >
-                Add Service
-              </button>
-            </div>
-            
-            {services.length === 0 ? (
-              <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">No services added yet. Click "Add Service" to add service timings.</p>
-            ) : (
-              <div className="space-y-4">
-                {services.map((service, index) => (
-                  <div key={index} className="border border-gray-200 dark:border-gray-600 rounded-lg p-4">
-                    <div className="flex justify-between items-start mb-3">
-                      <h4 className="font-medium text-gray-900 dark:text-white">Service {index + 1}</h4>
-                      <button
-                        type="button"
-                        onClick={() => removeService(index)}
-                        className="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 text-sm"
-                      >
-                        Remove
-                      </button>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                          Day *
-                        </label>
-                        <select
-                          value={service.day}
-                          onChange={(e) => updateService(index, 'day', e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                        >
-                          <option value="Sunday">Sunday</option>
-                          <option value="Monday">Monday</option>
-                          <option value="Tuesday">Tuesday</option>
-                          <option value="Wednesday">Wednesday</option>
-                          <option value="Thursday">Thursday</option>
-                          <option value="Friday">Friday</option>
-                          <option value="Saturday">Saturday</option>
-                        </select>
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                          Type *
-                        </label>
-                        <select
-                          value={service.type}
-                          onChange={(e) => updateService(index, 'type', e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                        >
-                          <option value="In-Person">In-Person</option>
-                          <option value="Online">Online</option>
-                        </select>
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                          Service Type
-                        </label>
-                        <input
-                          type="text"
-                          value={service.serviceType || ''}
-                          onChange={(e) => updateService(index, 'serviceType', e.target.value)}
-                          placeholder="e.g., English Service, Telugu Service"
-                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                        />
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                          Time *
-                        </label>
-                        <input
-                          type="text"
-                          value={service.time}
-                          onChange={(e) => updateService(index, 'time', e.target.value)}
-                          placeholder="e.g., 10:00 AM"
-                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                        />
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                          Location *
-                        </label>
-                        <input
-                          type="text"
-                          value={service.location}
-                          onChange={(e) => updateService(index, 'location', e.target.value)}
-                          placeholder="e.g., Main Hall, Online"
-                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                        />
-                      </div>
-                      
-                      {service.type === 'Online' && (
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Meeting Link
-                          </label>
-                          <input
-                            type="url"
-                            value={service.link || ''}
-                            onChange={(e) => updateService(index, 'link', e.target.value)}
-                            placeholder="https://zoom.us/j/..."
-                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                          />
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-          
-          <div className="mt-6 flex justify-end space-x-3">
-            <button
-              type="button"
-              onClick={() => router.push('/admin?tab=branches')}
-              className="px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-md transition-colors"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
-            >
-              Update Branch
-            </button>
-          </div>
-        </form>
+      <div className="flex justify-center">
+        <BranchForm
+          branch={editingBranch}
+          onSubmit={handleSubmit}
+          onCancel={() => router.push('/admin?tab=branches')}
+          loading={loading}
+          title="Edit Branch"
+        />
       </div>
 
       {/* Confirmation Modal */}

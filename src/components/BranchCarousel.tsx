@@ -14,19 +14,74 @@ interface Service {
 }
 
 interface Branch {
+  id: string;
   name: string;
   address: string;
   phone: string;
   services: Service[];
+  site?: {
+    id: string;
+    name: string;
+    domain: string;
+  };
 }
 
-interface BranchCarouselProps {
-  branches: Branch[];
-}
-
-export function BranchCarousel({ branches }: BranchCarouselProps) {
+export function BranchCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [branches, setBranches] = useState<Branch[]>([]);
+  const [loading, setLoading] = useState(true);
   const siteConfig = useSiteConfig();
+
+  useEffect(() => {
+    const fetchBranches = async () => {
+      try {
+        // For now, we'll fetch all branches and filter client-side
+        // In a real implementation, you'd want to pass site ID from server component
+        const response = await fetch('/api/branches');
+        const data = await response.json();
+        
+        if (data.data) {
+          // Filter branches by site if site info is available
+          let filteredBranches = data.data;
+          if (siteConfig && 'id' in siteConfig) {
+            filteredBranches = data.data.filter((branch: Branch) => 
+              branch.site?.id === siteConfig.id
+            );
+          }
+          setBranches(filteredBranches);
+        }
+      } catch (error) {
+        console.error('Error fetching branches:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBranches();
+  }, [siteConfig]);
+
+  if (loading) {
+    return (
+      <div className="w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+        <div className="animate-pulse">
+          <div className="h-4 bg-gray-200 rounded w-1/4 mb-4"></div>
+          <div className="h-3 bg-gray-200 rounded w-1/2 mb-2"></div>
+          <div className="h-3 bg-gray-200 rounded w-3/4"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (branches.length === 0) {
+    return (
+      <div className="w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+        <h3 className="text-xl font-bold mb-4">Our Locations</h3>
+        <p className="text-gray-600 dark:text-gray-400">
+          No branches are currently available for {siteConfig.titleHeader} {siteConfig.titleSubHeader}.
+        </p>
+      </div>
+    );
+  }
 
   useEffect(() => {
     const interval = setInterval(() => {

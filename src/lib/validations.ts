@@ -102,3 +102,28 @@ export const updateSermonSchema = z.object({
 }).refine((data) => Object.keys(data).length > 0, {
   message: 'At least one field must be provided for update'
 });
+
+// Site validation schemas
+export const createSiteSchema = z.object({
+  domain: z.string().min(3, 'Domain must be at least 3 characters'),
+  name: z.string().min(2, 'Name must be at least 2 characters'),
+  titleHeader: z.string().min(2, 'Title header must be at least 2 characters'),
+  titleSubHeader: z.string().min(2, 'Title subheader must be at least 2 characters'),
+  description: z.string().min(10, 'Description must be at least 10 characters'),
+  logo: z.string().optional().default('/images/logo.png'),
+  isActive: z.boolean().optional().default(true),
+  isDefault: z.boolean().optional().default(false),
+});
+
+export const updateSiteSchema = z.object({
+  domain: z.string().min(3, 'Domain must be at least 3 characters').optional(),
+  name: z.string().min(2, 'Name must be at least 2 characters').optional(),
+  titleHeader: z.string().min(2, 'Title header must be at least 2 characters').optional(),
+  titleSubHeader: z.string().min(2, 'Title subheader must be at least 2 characters').optional(),
+  description: z.string().min(10, 'Description must be at least 10 characters').optional(),
+  logo: z.string().optional(),
+  isActive: z.boolean().optional(),
+  isDefault: z.boolean().optional(),
+}).refine((data) => Object.keys(data).length > 0, {
+  message: 'At least one field must be provided for update'
+});

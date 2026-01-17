@@ -1,20 +1,57 @@
 import { NextResponse } from 'next/server';
 import { NextRequest } from 'next/server';
 import { getToken } from 'next-auth/jwt';
-import sitesConfig from './config/sites.json';
 
 export async function middleware(request: NextRequest) {
-  // Get the hostname from the request
-  const hostname = request.headers.get('host') || '';
+  // Get the hostname from the request and remove port if present
+  const rawHostname = request.headers.get('host') || '';
+  const hostname = rawHostname.split(':')[0]; // Remove port number if present
   
-  // Determine site configuration based on hostname
-  let siteConfig = sitesConfig.default;
-  if (hostname.includes('chag.in')) {
-    siteConfig = sitesConfig.sites['chag.in'];
-  } else if (hostname.includes('school.chif.life')) {
-    siteConfig = sitesConfig.sites['school.chif.life'];
-  } else if (hostname.includes('chif.life')) {
-    siteConfig = sitesConfig.sites['chif.life'];
+  // Find site configuration from API
+  let siteConfig = null;
+  
+  try {
+    // Fetch all sites from API (no auth required)
+    const sitesResponse = await fetch(`${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/sites-config`);
+    if (sitesResponse.ok) {
+      const sitesData = await sitesResponse.json();
+      if (sitesData.success && sitesData.data) {
+        const sites = sitesData.data;
+        
+        // Try to find exact domain match first
+        const exactMatch = sites.find(site => site.domain === hostname);
+        
+        if (exactMatch) {
+          siteConfig = exactMatch;
+        } else {
+          // Try to find partial match for subdomains
+          const matchedSite = sites.find(site => 
+            hostname.includes(site.domain) || site.domain.includes(hostname)
+          );
+          if (matchedSite) {
+            siteConfig = matchedSite;
+          } else {
+            // Fall back to default site
+            const defaultSite = sites.find(site => site.isDefault);
+            siteConfig = defaultSite;
+          }
+        }
+      }
+    }
+  } catch (error) {
+    console.error('Error fetching site configuration:', error);
+    // Continue with null siteConfig, will use fallbacks
+  }
+  
+  // Fallback configuration if API fails
+  if (!siteConfig) {
+    siteConfig = {
+      name: 'CHIF',
+      titleHeader: 'City Harvest',
+      titleSubHeader: 'International Fellowship',
+      description: 'A welcoming Christian community in the heart of the city.',
+      logo: '/images/logo.png'
+    };
   }
 
   // Create a new response with site configuration in headers
@@ -30,6 +67,11 @@ export async function middleware(request: NextRequest) {
   response.headers.set('x-site-title-subheader', siteConfig.titleSubHeader);
   response.headers.set('x-site-description', siteConfig.description);
   response.headers.set('x-site-logo', siteConfig.logo);
+  
+  // Add site ID if available
+  if (siteConfig.id) {
+    response.headers.set('x-site-id', siteConfig.id);
+  }
 
   // Get the pathname from the URL
   const { pathname } = new URL(request.url);
