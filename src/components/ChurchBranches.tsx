@@ -44,7 +44,7 @@ interface Branch {
 }
 
 interface ChurchBranchesProps {
-  branches: Branch[];
+  branches?: Branch[];
   sites?: Site[];
   onEdit?: (branch: Branch) => void;
   onToggleActive?: (branch: Branch) => void;

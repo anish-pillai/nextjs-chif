@@ -17,7 +17,7 @@ export async function GET(req) {
     const { searchParams } = new URL(req.url);
     const includeInactive = searchParams.get('includeInactive') === 'true';
     
-    const sites = await prisma.site.findMany({
+    const sites = await (prisma as any).site.findMany({
       where: includeInactive ? {} : { isActive: true },
       orderBy: [
         { isDefault: 'desc' },
@@ -38,7 +38,7 @@ export async function POST(req) {
     const validatedData = createSiteSchema.parse(body);
     
     // Check if domain already exists
-    const existingSite = await prisma.site.findUnique({
+    const existingSite = await (prisma as any).site.findUnique({
       where: { domain: validatedData.domain }
     });
     
@@ -48,14 +48,23 @@ export async function POST(req) {
     
     // If this is set as default, unset any existing default
     if (validatedData.isDefault) {
-      await prisma.site.updateMany({
+      await (prisma as any).site.updateMany({
         where: { isDefault: true },
         data: { isDefault: false }
       });
     }
     
-    const site = await prisma.site.create({
-      data: validatedData
+    const site = await (prisma as any).site.create({
+      data: {
+        domain: validatedData.domain,
+        name: validatedData.name,
+        titleHeader: validatedData.titleHeader,
+        titleSubHeader: validatedData.titleSubHeader,
+        description: validatedData.description,
+        logo: validatedData.logo,
+        isActive: validatedData.isActive ?? true,
+        isDefault: validatedData.isDefault ?? false,
+      }
     });
 
     return createdResponse(site);
