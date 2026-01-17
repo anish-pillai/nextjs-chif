@@ -1,0 +1,32 @@
+{
+  "sites": {
+    "chag.in": {
+      "name": "CHAG",
+      "titleHeader": "City Harvest",
+      "titleSubHeader": "AG Church",
+      "description": "A welcoming Christian community in the heart of the city.",
+      "logo": "/images/logo.png"
+    },
+    "chif.life": {
+      "name": "CHIF",
+      "titleHeader": "City Harvest",
+      "titleSubHeader": "International Fellowship",
+      "description": "A welcoming Christian community in the heart of the city.",
+      "logo": "/images/logo.png"
+    },
+    "school.chif.life": {
+      "name": "HLA",
+      "titleHeader": "Harvest",
+      "titleSubHeader": "Learning Academy",
+      "description": "A Christ-centered educational institution nurturing minds and spirits.",
+      "logo": "/images/logo.png"
+    }
+  },
+  "default": {
+    "name": "CHIF",
+    "titleHeader": "City Harvest",
+    "titleSubHeader": "International Fellowship",
+    "description": "A welcoming Christian community in the heart of the city.",
+    "logo": "/images/logo.png"
+  }
+}

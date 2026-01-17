@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { getSiteConfig } from '@/lib/site-config';
 
 const givingOptions = [
   {
@@ -73,14 +74,16 @@ const amounts = [
   { value: 2500, label: '$2500' },
 ];
 
-const GivePage = () => {
+const GivePage = async () => {
+  const siteConfig = await getSiteConfig();
+  
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       {/* Hero Section */}
       <section className="bg-primary-50 dark:bg-gray-800 py-20">
         <div className="container mx-auto px-4">
           <h1 className="text-4xl md:text-5xl font-bold text-center mb-6">
-            Give to Our Church
+            Give to {siteConfig.name}
           </h1>
           <p className="text-xl text-center text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
             Support our mission to spread God&apos;s love and make a difference in our community.
@@ -209,7 +212,7 @@ const GivePage = () => {
               <p className="text-gray-600 dark:text-gray-300">
                 Send checks to:
                 <br />
-                City Harvest AG Church
+                {siteConfig.titleHeader} {siteConfig.titleSubHeader}
                 <br />
                 123 Main Street
                 <br />

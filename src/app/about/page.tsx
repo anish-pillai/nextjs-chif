@@ -1,5 +1,6 @@
 import { Users, Heart, BookOpen } from 'lucide-react';
 import { prisma } from '@/lib/prisma';
+import { getSiteConfig } from '@/lib/site-config';
 
 interface TeamMember {
   id: string;
@@ -26,14 +27,16 @@ async function getLeadershipTeam(): Promise<TeamMember[]> {
 
 export default async function About() {
   const leadershipTeam = await getLeadershipTeam();
+  const siteConfig = await getSiteConfig();
+  
   return (
     <div>
       {/* Hero Section */}
       <section className="bg-primary-50 dark:bg-gray-800 py-20">
         <div className="container mx-auto px-4">
-          <h1 className="text-4xl md:text-5xl font-bold text-center mb-6">About Our Church</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-center mb-6">About {siteConfig.name}</h1>
           <p className="text-xl text-center text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            City Harvest AG Church is a vibrant, multicultural community of believers
+            {siteConfig.titleHeader} {siteConfig.titleSubHeader} is a vibrant, multicultural community of believers
             dedicated to sharing God's love and making a positive impact in our city.
           </p>
         </div>

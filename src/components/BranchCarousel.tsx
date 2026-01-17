@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { MapPin, Phone, Clock, Globe } from 'lucide-react';
+import { useSiteConfig } from '@/components/SiteConfigProvider';
 
 interface Service {
   day: string;
@@ -25,6 +26,7 @@ interface BranchCarouselProps {
 
 export function BranchCarousel({ branches }: BranchCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const siteConfig = useSiteConfig();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -49,9 +51,9 @@ export function BranchCarousel({ branches }: BranchCarouselProps) {
         <h1 className="mb-6">
           <span className="block text-3xl md:text-4xl font-medium mb-2">Welcome to</span>
           <span className="block text-6xl md:text-7xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-primary-400 to-primary-600 dark:from-primary-300 dark:to-primary-500">
-            City Harvest
+            {siteConfig.titleHeader}
           </span>
-          <span className="block text-5xl md:text-6xl font-bold">AG Church</span>
+          <span className="block text-5xl md:text-6xl font-bold">{siteConfig.titleSubHeader}</span>
         </h1>
         
         {/* Branch Name */}

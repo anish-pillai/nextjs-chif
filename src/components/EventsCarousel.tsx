@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { DateDisplay, TimeDisplay } from '@/components/TimeDisplay';
 import { Calendar, Clock, MapPin } from 'lucide-react';
+import { useSiteConfig } from '@/components/SiteConfigProvider';
 
 interface Event {
   id: string;
@@ -23,6 +24,7 @@ interface EventsCarouselProps {
 
 export function EventsCarousel({ events }: EventsCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const siteConfig = useSiteConfig();
 
   useEffect(() => {
     if (events.length <= 1) return;
@@ -45,9 +47,9 @@ export function EventsCarousel({ events }: EventsCarouselProps) {
           <h1 className="mb-4">
             <span className="block text-2xl sm:text-3xl md:text-4xl font-medium mb-1">Welcome to</span>
             <span className="block text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-primary-400 to-primary-600 dark:from-primary-300 dark:to-primary-500">
-              City Harvest
+              {siteConfig.titleHeader}
             </span>
-            <span className="block text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold">AG Church</span>
+            <span className="block text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold">{siteConfig.titleSubHeader}</span>
           </h1>
           <p className="text-lg sm:text-xl md:text-2xl mb-6 px-4">Join us this Sunday for an inspiring worship experience</p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 px-4">
@@ -75,9 +77,9 @@ export function EventsCarousel({ events }: EventsCarouselProps) {
         <div className="mb-4">
           <span className="block text-2xl sm:text-3xl md:text-4xl font-medium mb-1">Welcome to</span>
           <span className="block text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-primary-400 to-primary-600 dark:from-primary-300 dark:to-primary-500">
-            City Harvest
+            {siteConfig.titleHeader}
           </span>
-          <span className="block text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold">AG Church</span>
+          <span className="block text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold">{siteConfig.titleSubHeader}</span>
         </div>
 
         {/* Carousel Content - Only Events */}

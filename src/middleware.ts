@@ -1,8 +1,36 @@
 import { NextResponse } from 'next/server';
 import { NextRequest } from 'next/server';
 import { getToken } from 'next-auth/jwt';
+import sitesConfig from './config/sites.json';
 
 export async function middleware(request: NextRequest) {
+  // Get the hostname from the request
+  const hostname = request.headers.get('host') || '';
+  
+  // Determine site configuration based on hostname
+  let siteConfig = sitesConfig.default;
+  if (hostname.includes('chag.in')) {
+    siteConfig = sitesConfig.sites['chag.in'];
+  } else if (hostname.includes('school.chif.life')) {
+    siteConfig = sitesConfig.sites['school.chif.life'];
+  } else if (hostname.includes('chif.life')) {
+    siteConfig = sitesConfig.sites['chif.life'];
+  }
+
+  // Create a new response with site configuration in headers
+  const response = NextResponse.next({
+    request: {
+      headers: request.headers,
+    },
+  });
+
+  // Add site configuration to response headers
+  response.headers.set('x-site-name', siteConfig.name);
+  response.headers.set('x-site-title-header', siteConfig.titleHeader);
+  response.headers.set('x-site-title-subheader', siteConfig.titleSubHeader);
+  response.headers.set('x-site-description', siteConfig.description);
+  response.headers.set('x-site-logo', siteConfig.logo);
+
   // Get the pathname from the URL
   const { pathname } = new URL(request.url);
 
@@ -49,15 +77,12 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  return NextResponse.next();
+  return response;
 }
 
-// Configure the middleware to run on specific paths
+// Configure the middleware to run on all paths for site detection
 export const config = {
   matcher: [
-    '/admin/:path*',
-    '/api/events/:path*',
-    '/api/sermons/:path*',
-    '/api/users/:path*',
+    '/((?!api|_next/static|_next/image|favicon.ico).*)',
   ],
 };
