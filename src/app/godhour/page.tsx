@@ -2,11 +2,12 @@
 
 import { useEffect } from 'react';
 import { HeroSection } from '@/components/HeroSection';
+import Image from 'next/image';
 
 const GodHourPage = () => {
   useEffect(() => {
-    // Redirect to Zoom meeting
-    window.open('https://us06web.zoom.us/j/85494751529?pwd=DYX8CY0B02Hjay6Xojuq1dxVH810lW.1', '_blank', 'noopener,noreferrer');
+    // Redirect to Zoom meeting - works better on mobile
+    window.location.href = 'https://us06web.zoom.us/j/85494751529?pwd=DYX8CY0B02Hjay6Xojuq1dxVH810lW.1';
   }, []);
 
   return (
@@ -20,6 +21,17 @@ const GodHourPage = () => {
       <section className="py-16">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-2xl mx-auto">
+            {/* God's Hour Image */}
+            <div className="mb-8">
+              <Image
+                src="/images/godhour.png"
+                alt="God's Hour"
+                width={400}
+                height={300}
+                className="mx-auto rounded-lg shadow-lg"
+              />
+            </div>
+
             <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
               Welcome to God's Hour
             </h2>
