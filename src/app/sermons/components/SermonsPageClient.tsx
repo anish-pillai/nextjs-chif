@@ -10,24 +10,19 @@ import { HeroSection } from '@/components/HeroSection';
 type SermonWithPreacher = {
   id: string;
   title: string;
-  description: string;
   videoUrl: string | null;
-  audioUrl: string | null;
   preacherId: string;
   preacher: {
     id: string;
     name: string;
   };
   date: Date;
-  scripture: string;
-  series: string | null;
   createdAt: Date;
   updatedAt: Date;
 };
 
 interface SermonsPageClientProps {
   sermons: SermonWithPreacher[];
-  seriesList: string[];
 }
 
 function getYouTubeVideoId(url: string | null): string | null {
@@ -62,7 +57,7 @@ function getYouTubeVideoId(url: string | null): string | null {
   return null;
 }
 
-export function SermonsPageClient({ sermons, seriesList }: SermonsPageClientProps) {
+export function SermonsPageClient({ sermons }: SermonsPageClientProps) {
   const [searchTerm, setSearchTerm] = React.useState('');
   const [selectedVideoId, setSelectedVideoId] = React.useState<string | null>(null);
   const [isVideoModalOpen, setIsVideoModalOpen] = React.useState(false);
@@ -148,9 +143,6 @@ export function SermonsPageClient({ sermons, seriesList }: SermonsPageClientProp
                   </h3>
                   <p className="text-gray-600 dark:text-gray-300 mb-2">
                     {sermon.preacher.name}
-                  </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                    Series: {sermon.series}
                   </p>
                   <div className="flex gap-3">
                     <button 

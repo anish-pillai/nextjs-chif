@@ -5,6 +5,7 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import { EventClickArg, EventContentArg } from '@fullcalendar/core';
 import { EventModal } from './EventModal';
+import { getTimezoneAbbr } from '@/lib/timezone';
 
 // Import the custom Event type that includes organizer information
 import { Event as ChurchEvent } from '@/types';
@@ -16,6 +17,13 @@ interface EventsCalendarProps {
 export function EventsCalendar({ events }: EventsCalendarProps) {
   const [selectedEvent, setSelectedEvent] = React.useState<EventClickArg['event'] | null>(null);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [timezone, setTimezone] = React.useState<string>('UTC');
+  const [isClient, setIsClient] = React.useState(false);
+  
+  React.useEffect(() => {
+    setIsClient(true);
+    setTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone);
+  }, []);
 
   const handleEventClick = React.useCallback((info: EventClickArg) => {
     setSelectedEvent(info.event);
@@ -35,6 +43,24 @@ export function EventsCalendar({ events }: EventsCalendarProps) {
     }
   }));
 
+  // Create a wrapper function that includes the timezone
+  const renderEventContentWithTimezone = (eventInfo: EventContentArg) => {
+    const tzAbbr = eventInfo.event.start ? getTimezoneAbbr(eventInfo.event.start, timezone) : '';
+    
+    return (
+      <div className="p-1 hover:bg-primary-50 dark:bg-primary-500 hover:bg-primary-900/20 cursor-pointer transition-colors rounded group">
+        <div className="font-semibold text-sm truncate group-hover:text-primary-600 dark:group-hover:text-primary-400">{eventInfo.event.title}</div>
+        <div className="text-xs text-gray-100 dark:text-gray-300 truncate group-hover:text-primary-500/80 dark:group-hover:text-primary-300/80">
+          {eventInfo.event.start?.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })} - 
+          {eventInfo.event.end?.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })} {tzAbbr}
+        </div>
+        <div className="text-xs text-gray-100 dark:text-gray-300 truncate group-hover:text-primary-500/80 dark:group-hover:text-primary-300/80">
+          {eventInfo.event.extendedProps.location}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <>
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
@@ -47,7 +73,7 @@ export function EventsCalendar({ events }: EventsCalendarProps) {
             center: 'title',
             right: 'dayGridMonth'
           }}
-          eventContent={renderEventContent}
+          eventContent={renderEventContentWithTimezone}
           height="auto"
           eventClick={handleEventClick}
         />
@@ -70,21 +96,6 @@ export function EventsCalendar({ events }: EventsCalendarProps) {
         } : null}
       />
     </>
-  );
-}
-
-function renderEventContent(eventInfo: EventContentArg) {
-  return (
-    <div className="p-1 hover:bg-primary-50 dark:bg-primary-500 hover:bg-primary-900/20 cursor-pointer transition-colors rounded group">
-      <div className="font-semibold text-sm truncate group-hover:text-primary-600 dark:group-hover:text-primary-400">{eventInfo.event.title}</div>
-      <div className="text-xs text-gray-100 dark:text-gray-300 truncate group-hover:text-primary-500/80 dark:group-hover:text-primary-300/80">
-        {eventInfo.event.start?.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })} - 
-        {eventInfo.event.end?.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}
-      </div>
-      <div className="text-xs text-gray-100 dark:text-gray-300 truncate group-hover:text-primary-500/80 dark:group-hover:text-primary-300/80">
-        {eventInfo.event.extendedProps.location}
-      </div>
-    </div>
   );
 }
 

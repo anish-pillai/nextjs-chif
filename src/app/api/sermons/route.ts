@@ -18,7 +18,6 @@ export async function GET(req) {
     
     // Parse filters
     const preacherId = searchParams.get('preacherId');
-    const series = searchParams.get('series');
     const limit = parseInt(searchParams.get('limit') || '10');
     const offset = parseInt(searchParams.get('offset') || '0');
     
@@ -27,10 +26,6 @@ export async function GET(req) {
     
     if (preacherId) {
       where.preacherId = preacherId;
-    }
-    
-    if (series) {
-      where.series = series;
     }
     
     const [sermons, total] = await Promise.all([
@@ -89,12 +84,8 @@ export async function POST(req) {
     
     const data = {
       title: validatedData.title,
-      description: validatedData.description,
       videoUrl: validatedData.videoUrl,
-      audioUrl: validatedData.audioUrl,
       date: dateTimestamp,
-      scripture: validatedData.scripture,
-      series: validatedData.series,
       createdAt: Math.floor(Date.now() / 1000),
       updatedAt: Math.floor(Date.now() / 1000),
       // Properly format preacher relationship

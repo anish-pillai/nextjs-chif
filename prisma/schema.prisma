@@ -78,18 +78,14 @@ model Event {
 }
 
 model Sermon {
-  id          String  @id @default(cuid())
-  title       String
-  description String
-  videoUrl    String?
-  audioUrl    String?
-  preacherId  String
-  scripture   String
-  series      String?
-  date        Int
-  createdAt   Int
-  updatedAt   Int
-  preacher    leadershipTeam @relation(fields: [preacherId], references: [id])
+  id         String  @id @default(cuid())
+  title      String
+  videoUrl   String?
+  preacherId String
+  date       Int
+  createdAt  Int
+  updatedAt  Int
+  preacher   leadershipTeam @relation(fields: [preacherId], references: [id])
 
   @@index([preacherId])
 }
@@ -177,6 +173,21 @@ model BranchSite {
   @@unique([branchId, siteId])
   @@index([branchId])
   @@index([siteId])
+}
+
+model HeroImage {
+  id        String   @id @default(cuid())
+  title     String
+  imageUrl  String
+  width     Int
+  height    Int
+  isActive  Boolean  @default(true)
+  order     Int      @default(0)
+  createdAt Int      @default(dbgenerated("extract(epoch from now())::integer"))
+  updatedAt Int      @default(dbgenerated("extract(epoch from now())::integer"))
+
+  @@index([order])
+  @@index([isActive])
 }
 
 enum Role {

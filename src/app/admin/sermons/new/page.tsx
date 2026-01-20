@@ -23,13 +23,9 @@ export default function NewSermon() {
   const [leadershipTeam, setLeadershipTeam] = useState<LeadershipMember[]>([]);
   const [formData, setFormData] = useState({
     title: '',
-    description: '',
     preacherId: '',
     date: '',
     videoUrl: '',
-    audioUrl: '',
-    scripture: '',
-    series: '',
   });
 
   // Fetch leadership team on component mount
@@ -70,8 +66,8 @@ export default function NewSermon() {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
     
-    // Clear error when user starts typing in description
-    if (name === 'description' && value.length >= 10) {
+    // Clear error when user starts typing
+    if (name === 'title' && value.length >= 3) {
       setError(null);
     }
   };
@@ -97,22 +93,8 @@ export default function NewSermon() {
       return;
     }
 
-    if (!formData.description.trim()) {
-      setError('Sermon description is required');
-      setLoading(false);
-      setIsSubmitting(false);
-      return;
-    }
-
-    if (formData.description.trim().length < 10) {
-      setError('Sermon description must be at least 10 characters');
-      setLoading(false);
-      setIsSubmitting(false);
-      return;
-    }
-
-    if (!formData.scripture.trim()) {
-      setError('Scripture reference is required');
+    if (formData.title.trim().length < 3) {
+      setError('Sermon title must be at least 3 characters');
       setLoading(false);
       setIsSubmitting(false);
       return;
@@ -152,18 +134,14 @@ export default function NewSermon() {
       
       const sermonData = {
         title: formData.title,
-        description: formData.description,
         preacherId: formData.preacherId, // Use selected preacher from leadership team
         date: unixTimestamp, // Store as Unix timestamp in seconds
         videoUrl: formData.videoUrl || null,
-        audioUrl: formData.audioUrl || null,
-        scripture: formData.scripture,
-        series: formData.series || null
       };
 
       console.log('Submitting sermon data:', sermonData);
-      console.log('Description length:', formData.description.length);
-      console.log('Description value:', JSON.stringify(formData.description));
+      console.log('Title length:', formData.title.length);
+      console.log('Title value:', JSON.stringify(formData.title));
 
       const response = await fetch('/api/sermons', {
         method: 'POST',
@@ -224,37 +202,7 @@ export default function NewSermon() {
                 value={formData.title}
                 onChange={handleChange}
                 required
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-              />
-            </div>
-
-            <div className="col-span-2">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Description * (minimum 10 characters)
-              </label>
-              <textarea
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-                required
-                minLength={10}
-                rows={4}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                placeholder="Enter a detailed description of the sermon (at least 10 characters)..."
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Scripture Reference *
-              </label>
-              <input
-                type="text"
-                name="scripture"
-                value={formData.scripture}
-                onChange={handleChange}
-                required
-                placeholder="e.g., John 3:16"
+                minLength={3}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
               />
             </div>
@@ -298,21 +246,7 @@ export default function NewSermon() {
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Series (Optional)
-              </label>
-              <input
-                type="text"
-                name="series"
-                value={formData.series}
-                onChange={handleChange}
-                placeholder="e.g., Summer Series"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-              />
-            </div>
-
-            <div>
+            <div className="col-span-2">
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Video URL (Optional)
               </label>
@@ -324,24 +258,6 @@ export default function NewSermon() {
                 placeholder="https://youtube.com/..."
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
               />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Audio URL (Optional)
-              </label>
-              <input
-                type="url"
-                name="audioUrl"
-                value={formData.audioUrl}
-                onChange={handleChange}
-                placeholder="https://example.com/audio.mp3"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-              />
-            </div>
-
-            <div>
-
             </div>
           </div>
 

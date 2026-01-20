@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { ConfirmModal } from '@/components/ConfirmModal';
 import { LeadershipModal } from '@/components/LeadershipModal';
 import SitesManagement from './sites/page';
+import { HeroImagesManagement } from '@/components/admin/HeroImagesManagement';
 
 interface User {
   id: string;
@@ -64,7 +65,7 @@ function AdminDashboardContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const tabParam = searchParams.get('tab');
-  const [activeTab, setActiveTab] = useState(tabParam && ['users', 'events', 'sermons', 'leadership', 'branches', 'sites'].includes(tabParam) ? tabParam : 'users');
+  const [activeTab, setActiveTab] = useState(tabParam && ['users', 'events', 'sermons', 'leadership', 'branches', 'sites', 'hero-images'].includes(tabParam) ? tabParam : 'users');
   const [users, setUsers] = useState<User[]>([]);
   const [events, setEvents] = useState<Event[]>([]);
   const [sermons, setSermons] = useState<Sermon[]>([]);
@@ -530,6 +531,15 @@ function AdminDashboardContent() {
         >
           Sites
         </button>
+        <button
+          onClick={() => {
+            setActiveTab('hero-images');
+            router.push('/admin?tab=hero-images');
+          }}
+          className={`py-2 px-4 font-medium ${activeTab === 'hero-images' ? 'text-primary-600 border-b-2 border-primary-600' : 'text-gray-500 hover:text-primary-500'}`}
+        >
+          Hero Images
+        </button>
       </div>
       
       {/* Content based on active tab */}
@@ -685,7 +695,7 @@ function AdminDashboardContent() {
         {activeTab === 'branches' && (
           <div className="p-6">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold">Church Branches Management 234234</h2>
+              <h2 className="text-xl font-semibold">Church Branches Management</h2>
               <Link 
                 href="/admin/branches/new"
                 className="px-4 py-2 bg-primary-600 text-white rounded hover:bg-primary-700 transition-colors"
@@ -823,6 +833,12 @@ function AdminDashboardContent() {
         
         {activeTab === 'sites' && (
           <SitesManagement />
+        )}
+        
+        {activeTab === 'hero-images' && (
+          <div className="space-y-6">
+            <HeroImagesManagement />
+          </div>
         )}
       </div>
 

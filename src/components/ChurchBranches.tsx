@@ -176,25 +176,6 @@ export function ChurchBranches({ branches: initialBranches, sites, onEdit, onTog
                 
                 {/* Branch Info */}
                 <div className="space-y-3 mb-6">
-                  {branch.country && (
-                    <div className="flex items-start space-x-3">
-                      <Globe className="h-5 w-5 text-primary-600 dark:text-primary-400 mt-0.5 flex-shrink-0" />
-                      <span className="text-gray-600 dark:text-gray-300 text-sm">{branch.country}</span>
-                    </div>
-                  )}
-                  {/* Display assigned sites */}
-                  {branch.branchSites && Array.isArray(branch.branchSites) && branch.branchSites.length > 0 && (
-                    <div className="flex items-start space-x-3">
-                      <Globe className="h-5 w-5 text-primary-600 dark:text-primary-400 mt-0.5 flex-shrink-0" />
-                      <div className="flex flex-wrap gap-1">
-                        {branch.branchSites.map((bs: any) => (
-                          <span key={bs.siteId} className="inline-block bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200 text-xs px-2 py-1 rounded">
-                            {bs.site.name}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
                   <div className="flex items-start space-x-3">
                     <MapPin className="h-5 w-5 text-primary-600 dark:text-primary-400 mt-0.5 flex-shrink-0" />
                     <span className="text-gray-600 dark:text-gray-300 text-sm">{branch.address}</span>

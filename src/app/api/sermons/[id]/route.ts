@@ -79,13 +79,9 @@ export async function PUT(request: NextRequest, { params }) {
       where: { id },
       data: {
         title: data.title,
-        description: data.description,
         videoUrl: data.videoUrl,
-        audioUrl: data.audioUrl,
         preacherId: data.preacherId,
         date: processDateForStorage(data.date),
-        scripture: data.scripture,
-        series: data.series,
         updatedAt: Math.floor(Date.now() / 1000)
       },
       include: {

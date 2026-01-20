@@ -4,6 +4,7 @@ import React from 'react';
 import { format } from 'date-fns';
 import { DateDisplay, TimeDisplay } from '@/components/TimeDisplay';
 import { X, Calendar, Clock, MapPin, User } from 'lucide-react';
+import { getTimezoneAbbr } from '@/lib/timezone';
 
 interface EventModalProps {
   isOpen: boolean;
@@ -21,6 +22,14 @@ interface EventModalProps {
 }
 
 export function EventModal({ isOpen, onClose, event }: EventModalProps) {
+  const [timezone, setTimezone] = React.useState<string>('UTC');
+  const [isClient, setIsClient] = React.useState(false);
+  
+  React.useEffect(() => {
+    setIsClient(true);
+    setTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone);
+  }, []);
+
   if (!isOpen || !event) return null;
 
   return (
@@ -52,7 +61,7 @@ export function EventModal({ isOpen, onClose, event }: EventModalProps) {
             <div>
               <div className="font-medium text-gray-900 dark:text-white">Time</div>
               <div className="text-gray-600 dark:text-gray-300">
-                {event.start.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })} - {event.end.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })} {event.start.toLocaleTimeString('en-US', { timeZoneName: 'short' }).split(' ')[2]}
+                {event.start.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })} - {event.end.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })} {isClient ? getTimezoneAbbr(event.start, timezone) : ''}
               </div>
             </div>
           </div>

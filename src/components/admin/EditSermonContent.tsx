@@ -17,14 +17,12 @@ interface LeadershipMember {
 interface SermonData {
   id: string;
   title: string;
-  description: string;
   preacherId: string;
   date: number;
   dateString?: string; // Add dateString property for form handling
   videoUrl: string | null;
-  audioUrl: string | null;
-  scripture: string;
-  series: string | null;
+  createdAt: number;
+  updatedAt: number;
 }
 
 export default function EditSermonContent({ id }: { id: string }) {
@@ -37,13 +35,11 @@ export default function EditSermonContent({ id }: { id: string }) {
   const [formData, setFormData] = useState<SermonData>({
     id: '',
     title: '',
-    description: '',
     preacherId: '',
     date: 0,
     videoUrl: '',
-    audioUrl: '',
-    scripture: '',
-    series: '',
+    createdAt: 0,
+    updatedAt: 0,
   });
 
   // Fetch leadership team on component mount
@@ -150,13 +146,9 @@ export default function EditSermonContent({ id }: { id: string }) {
       
       const sermonData = {
         title: formData.title,
-        description: formData.description,
         preacherId: formData.preacherId,
         date: unixTimestamp, // Store as Unix timestamp in seconds
-        videoUrl: formData.videoUrl || null,
-        audioUrl: formData.audioUrl || null,
-        scripture: formData.scripture,
-        series: formData.series || null
+        videoUrl: formData.videoUrl || null
       };
 
       const response = await fetch(`/api/sermons/${id}`, {
@@ -217,20 +209,7 @@ export default function EditSermonContent({ id }: { id: string }) {
                 value={formData.title}
                 onChange={handleChange}
                 required
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-              />
-            </div>
-
-            <div className="col-span-2">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Description *
-              </label>
-              <textarea
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-                required
-                rows={4}
+                minLength={3}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
               />
             </div>
@@ -262,21 +241,6 @@ export default function EditSermonContent({ id }: { id: string }) {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Scripture Reference *
-              </label>
-              <input
-                type="text"
-                name="scripture"
-                value={formData.scripture}
-                onChange={handleChange}
-                required
-                placeholder="e.g., John 3:16"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Date *
               </label>
               <input
@@ -289,21 +253,7 @@ export default function EditSermonContent({ id }: { id: string }) {
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Series (Optional)
-              </label>
-              <input
-                type="text"
-                name="series"
-                value={formData.series || ''}
-                onChange={handleChange}
-                placeholder="e.g., Summer Series"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-              />
-            </div>
-
-            <div>
+            <div className="col-span-2">
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Video URL (Optional)
               </label>
@@ -313,20 +263,6 @@ export default function EditSermonContent({ id }: { id: string }) {
                 value={formData.videoUrl || ''}
                 onChange={handleChange}
                 placeholder="https://youtube.com/..."
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Audio URL (Optional)
-              </label>
-              <input
-                type="url"
-                name="audioUrl"
-                value={formData.audioUrl || ''}
-                onChange={handleChange}
-                placeholder="https://example.com/audio.mp3"
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
               />
             </div>

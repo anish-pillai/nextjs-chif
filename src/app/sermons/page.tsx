@@ -4,32 +4,24 @@ import { SermonsPageClient } from './components/SermonsPageClient';
 type SermonWithPreacher = {
   id: string;
   title: string;
-  description: string;
   videoUrl: string | null;
-  audioUrl: string | null;
   preacherId: string;
   preacher: {
     id: string;
     name: string;
   };
   date: Date;
-  scripture: string;
-  series: string | null;
   createdAt: Date;
   updatedAt: Date;
 };
 
 export const dynamic = 'force-dynamic'; // Disable SSG to always fetch fresh data
 
-async function getSermons(preacherId?: string, series?: string, limit: number = 12) {
+async function getSermons(preacherId?: string, limit: number = 12) {
   const where: any = {};
   
   if (preacherId) {
     where.preacherId = preacherId;
-  }
-  
-  if (series) {
-    where.series = series;
   }
   
   try {
@@ -52,27 +44,8 @@ async function getSermons(preacherId?: string, series?: string, limit: number = 
   }
 }
 
-async function getSeriesList() {
-  // Get unique series from existing sermons
-  const series = await prisma.sermon.groupBy({
-    by: ['series'],
-    where: {
-      series: {
-        not: null
-      }
-    }
-  });
-  
-  return series
-    .map((s: { series: string | null }) => s.series)
-    .filter((s: string | null): s is string => s !== null);
-}
-
 export default async function SermonsPage() {
-  const [fetchedSermons, seriesList] = await Promise.all([
-    getSermons(),
-    getSeriesList()
-  ]);
+  const fetchedSermons = await getSermons();
 
   // Convert numeric dates to Date objects for the client component
   // Handle empty arrays and ensure safe conversion
@@ -83,5 +56,5 @@ export default async function SermonsPage() {
     updatedAt: sermon.updatedAt ? new Date(sermon.updatedAt * 1000) : new Date()
   })) : [];
 
-  return <SermonsPageClient sermons={sermons} seriesList={seriesList} />;
+  return <SermonsPageClient sermons={sermons} />;
 }

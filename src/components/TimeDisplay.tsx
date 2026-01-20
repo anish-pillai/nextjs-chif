@@ -3,16 +3,12 @@
 import { format } from 'date-fns';
 import { toZonedTime } from 'date-fns-tz';
 import { useState, useEffect } from 'react';
+import { getTimezoneAbbr } from '@/lib/timezone';
 
 interface TimeDisplayProps {
   timestamp: number;
   format?: string;
   className?: string;
-}
-
-// Helper function to get timezone abbreviation
-function getTimezoneAbbr(date: Date): string {
-  return date.toLocaleTimeString('en-US', { timeZoneName: 'short' }).split(' ')[2];
 }
 
 export function TimeDisplay({ timestamp, format: formatStr = 'p', className }: TimeDisplayProps) {
@@ -29,7 +25,7 @@ export function TimeDisplay({ timestamp, format: formatStr = 'p', className }: T
   const localDate = isClient ? toZonedTime(utcDate, timezone) : utcDate;
   
   // Get timezone abbreviation only on client
-  const tzAbbr = isClient ? getTimezoneAbbr(localDate) : '';
+  const tzAbbr = isClient ? getTimezoneAbbr(localDate, timezone) : '';
   
   return (
     <time dateTime={utcDate.toISOString()} className={className}>
@@ -72,7 +68,7 @@ export function DateTimeDisplay({ timestamp, format: formatStr = 'PPp', classNam
   const localDate = isClient ? toZonedTime(utcDate, timezone) : utcDate;
   
   // Get timezone abbreviation only on client
-  const tzAbbr = isClient ? getTimezoneAbbr(localDate) : '';
+  const tzAbbr = isClient ? getTimezoneAbbr(localDate, timezone) : '';
   
   return (
     <time dateTime={utcDate.toISOString()} className={className}>

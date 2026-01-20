@@ -1,8 +1,8 @@
-import { HeroBackground } from '@/components/HeroBackground';
-import { EventsCarousel } from '@/components/EventsCarousel';
-import { ChurchBranches } from '@/components/ChurchBranches';
 import { prisma } from '@/lib/db';
 import { getCurrentTimestamp } from '@/lib/utils';
+import { getSiteConfig } from '@/lib/site-config';
+import { SiteConfigProvider } from '@/components/SiteConfigProvider';
+import { HomeClient } from '@/components/HomeClient';
 
 async function getFutureEvents() {
   try {
@@ -31,22 +31,47 @@ async function getFutureEvents() {
   }
 }
 
+async function getLatestSermon() {
+  try {
+    const latestSermon = await prisma.sermon.findFirst({
+      orderBy: { date: 'desc' },
+      include: {
+        preacher: {
+          select: {
+            id: true,
+            name: true,
+          }
+        }
+      }
+    });
+
+    if (!latestSermon) return null;
+
+    // Convert to match SermonWithPreacher type
+    return {
+      ...latestSermon,
+      date: new Date(latestSermon.date * 1000), // Convert from Unix timestamp to Date
+      createdAt: new Date(latestSermon.createdAt * 1000),
+      updatedAt: new Date(latestSermon.updatedAt * 1000),
+    };
+  } catch (error) {
+    console.error('Error fetching latest sermon:', error);
+    return null;
+  }
+}
+
 export default async function Home() {
   const futureEvents = await getFutureEvents();
+  const latestSermon = await getLatestSermon();
+  const siteConfig = await getSiteConfig();
+
   return (
-    <div>
-      {/* Hero Section */}
-      <section className="relative min-h-[calc(50vh-4rem)] md:min-h-[calc(35vh-1rem)] flex items-start justify-center pt-16">
-        <HeroBackground />
-        
-        {/* Dark overlay for text readability */}
-        <div className="absolute inset-0 bg-black/30" />
-        <EventsCarousel events={futureEvents} />
-      </section>
-
-      {/* Church Branches Section */}
-      <ChurchBranches />
-
-    </div>
+    <SiteConfigProvider siteConfig={siteConfig}>
+      <HomeClient 
+        latestSermon={latestSermon}
+        futureEvents={futureEvents}
+        siteConfig={siteConfig}
+      />
+    </SiteConfigProvider>
   );
 }

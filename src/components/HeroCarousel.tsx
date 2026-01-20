@@ -15,7 +15,7 @@ interface HeroImage {
 let imageCache: { images: HeroImage[]; timestamp: number } | null = null;
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
-export function HeroBackground() {
+export function HeroCarousel() {
   const [images, setImages] = useState<HeroImage[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -80,7 +80,7 @@ export function HeroBackground() {
 
   if (isLoading) {
     return (
-      <div className="absolute inset-0 overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
+      <div className="relative h-96 lg:h-full overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
         <div className="absolute inset-0 bg-black/30" />
       </div>
     );
@@ -89,7 +89,7 @@ export function HeroBackground() {
   if (images.length === 0) {
     // Fallback to default background
     return (
-      <div className="absolute inset-0 overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
+      <div className="relative h-96 lg:h-full overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
         <img
           src="/images/bg2.jpg"
           alt="Hero background"
@@ -101,7 +101,7 @@ export function HeroBackground() {
   }
 
   return (
-    <div className="absolute inset-0 overflow-hidden">
+    <div className="relative h-96 lg:h-full overflow-hidden">
       {/* Carousel Images */}
       <div className="relative w-full h-full">
         {images.map((image, index) => (

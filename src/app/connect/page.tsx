@@ -44,7 +44,7 @@ const ConnectPage = () => {
                     />
                   </svg>
                   <span className="text-gray-600 dark:text-gray-300">
-                    123 Main Street, City, State 12345
+                    # 42, 1st floor, Moksha Arcade,Soujanya Colony, New Bowenpally, Secunderabad
                   </span>
                 </div>
                 <div className="flex items-start space-x-4">
@@ -62,7 +62,7 @@ const ConnectPage = () => {
                     />
                   </svg>
                   <span className="text-gray-600 dark:text-gray-300">
-                    (555) 123-4567
+                    +91 988 555 0877
                   </span>
                 </div>
                 <div className="flex items-start space-x-4">
@@ -80,25 +80,7 @@ const ConnectPage = () => {
                     />
                   </svg>
                   <span className="text-gray-600 dark:text-gray-300">
-                    info@chif.church
-                  </span>
-                </div>
-                <div className="flex items-start space-x-4">
-                  <svg
-                    className="w-6 h-6 text-primary-500 mt-1"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                  <span className="text-gray-600 dark:text-gray-300">
-                    Sunday Services: 10:00 AM
+                    chag270107@gmail.com
                   </span>
                 </div>
               </div>
@@ -110,7 +92,7 @@ const ConnectPage = () => {
                 </h3>
                 <div className="flex space-x-4">
                   <Link
-                    href="#"
+                    href="https://www.facebook.com/CityHarvestAssemblyOfGod/"
                     className="w-12 h-12 bg-[#1877F2] rounded-full flex items-center justify-center text-white hover:bg-[#1864D6] transition-colors"
                   >
                     <svg
@@ -122,7 +104,7 @@ const ConnectPage = () => {
                     </svg>
                   </Link>
                   <Link
-                    href="#"
+                    href="https://www.instagram.com/cityharvest_ag_church/"
                     className="w-12 h-12 bg-[#E4405F] rounded-full flex items-center justify-center text-white hover:bg-[#D63A54] transition-colors"
                   >
                     <svg
@@ -134,7 +116,7 @@ const ConnectPage = () => {
                     </svg>
                   </Link>
                   <Link
-                    href="#"
+                    href="https://www.youtube.com/@cityharvestagchurch-hyd7375"
                     className="w-12 h-12 bg-[#FF0000] rounded-full flex items-center justify-center text-white hover:bg-[#E60000] transition-colors"
                   >
                     <svg
