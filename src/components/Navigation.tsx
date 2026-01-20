@@ -21,7 +21,7 @@ const navigation = [
   { name: 'Events', href: '/events' },
   { name: 'Sermons', href: '/sermons' },
   { name: 'Connect', href: '/connect' },
-  { name: "God's Hour", href: 'https://us06web.zoom.us/j/85494751529?pwd=DYX8CY0B02Hjay6Xojuq1dxVH810lW.1', external: true },
+  { name: "God's Hour", href: '/godhour' },
   { name: 'Give', href: '/give' },
 ];
 
@@ -68,8 +68,6 @@ export function Navigation() {
                 className={`px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-800 ${
                   isActive(item.href) ? 'text-primary-600 dark:text-primary-400' : ''
                 }`}
-                target={item.external ? '_blank' : undefined}
-                rel={item.external ? 'noopener noreferrer' : undefined}
               >
                 {item.name}
               </Link>
@@ -136,8 +134,6 @@ export function Navigation() {
                         isActive(item.href) ? 'text-primary-600 dark:text-primary-400' : ''
                       }`}
                       onClick={() => setMobileMenuOpen(false)}
-                      target={item.external ? '_blank' : undefined}
-                      rel={item.external ? 'noopener noreferrer' : undefined}
                     >
                       {item.name}
                     </Link>
