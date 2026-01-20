@@ -94,6 +94,8 @@ const ConnectPage = () => {
                   <Link
                     href="https://www.facebook.com/CityHarvestAssemblyOfGod/"
                     className="w-12 h-12 bg-[#1877F2] rounded-full flex items-center justify-center text-white hover:bg-[#1864D6] transition-colors"
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
                     <svg
                       className="w-6 h-6"
@@ -106,6 +108,8 @@ const ConnectPage = () => {
                   <Link
                     href="https://www.instagram.com/cityharvest_ag_church/"
                     className="w-12 h-12 bg-[#E4405F] rounded-full flex items-center justify-center text-white hover:bg-[#D63A54] transition-colors"
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
                     <svg
                       className="w-6 h-6"
@@ -118,6 +122,8 @@ const ConnectPage = () => {
                   <Link
                     href="https://www.youtube.com/@cityharvestagchurch-hyd7375"
                     className="w-12 h-12 bg-[#FF0000] rounded-full flex items-center justify-center text-white hover:bg-[#E60000] transition-colors"
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
                     <svg
                       className="w-6 h-6"
